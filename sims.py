@@ -23,21 +23,16 @@ def parse_roi(x):
     d = np.zeros(len(b))
     for i in range(len(b)):
         d[i] = float(b[i])
-    return d[:2], d[2:]
-
-
+    return d
 
 roi = "1.31.18_GFPP1_Hela_1min_002ROI.txt"
-roi = parse_roi(roi)
+d = parse_roi(roi)
 
+plt.plot(mask[0,:], mask[1,:], ".")
+plt.plot(d[0], d[1], ".")
+plt.plot(d[0] + d[2], d[1], ".")
+plt.plot(d[0], d[1] + d[3], ".")
+plt.plot(d[0] + d[2], d[1] + d[3], ".")
 
-
-def parse_data(x):
-    with open(x) as f:
-        a = f.read()
-    b = a.split('\n')
-
-
-
-def sim_rand_walk(N, runtime, h, mask, roi, f, D, color):
-    ntotal = int(runtime/h)
+# def sim_rand_walk(N, runtime, h, mask, roi, f, D, color):
+#     ntotal = int(runtime/h)
