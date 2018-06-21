@@ -21,6 +21,34 @@
 #  MA 02110-1301, USA.
 #  
 #  
+"""
+From parpsimulator.m:
+
+    %PARPSIMULATOR  Class to simulate free diffusion of PARP molecules
+    %
+    % parpsimulator Properties:
+    %   pxSize - Physical units of the simulated grid in microns/pixel
+    %   deltaT - Physical units of each time step in seconds/time step
+    %   diffusionCoeff - Diffusion coefficient in microns^2/seconds
+    %   mparpFrac - Percent fraction of mobile PARP particles
+    %   unbleachedFrac - Percent fraction of photobleached particles
+    %   numParticles - Number of particles to simulate
+    %   numSteps - Number of time steps to simulate
+    %   outputMovie - If true, a movie will be saved
+    %
+    % parpsimulator Methods:
+    %   simulate - Run the simulation using specified parameters
+    %   parameterSweep - Search for best fit diffusion coefficient and mobile PARP fraction
+    %
+    % Example:
+    %   %Create an instance of the class
+    %   sim = parpsimulator
+    %
+    %   %Run the simulation with default settings
+    %   
+"""
+
+
 
 
 def main(args):
