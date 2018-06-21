@@ -34,5 +34,35 @@ plt.plot(d[0] + d[2], d[1], ".")
 plt.plot(d[0], d[1] + d[3], ".")
 plt.plot(d[0] + d[2], d[1] + d[3], ".")
 
-# def sim_rand_walk(N, runtime, h, mask, roi, f, D, color):
-#     ntotal = int(runtime/h)
+#first 6 frames nothing happens
+#
+
+def parse_data(data, offset):
+    with open(data, 'r') as f:
+        a = f.read()
+    b = a.split('\n')
+    d = np.zeros((2, len(b)-5))
+    for i in range(len(b)-5):
+        c = b[i+4].split(',')
+        d[0,i] = float(c[0])
+        d[1,i] = float(c[11])
+    x1 = d[:,:6]
+    x2 = d[:,6:]
+    x1[0,:] -= offset
+    x2[0,:] -= offset
+    return x1, x2
+
+# def parse_data(data):
+#     with open(data, 'r') as f:
+#         a = f.read()
+#     b = a.split('\n')
+#     d = np.zeros((2, len(b)-5))
+#     for i in range(len(b)-5):
+#         c = b[i+4].split(',')
+#         d[0,i] = float(c[0])
+#         d[1,i] = float(c[11])
+#     return d
+
+data_pre, data = parse_data("1.31.18_GFPP1_Hela_1min_002.csv")
+plt.plot(data[0,:], data[1,:], ".")
+plt.show()
