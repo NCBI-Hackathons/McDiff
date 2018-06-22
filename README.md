@@ -61,7 +61,7 @@ Once we had a simulation of particles moving in the nucleus, we started work on 
 
 Then we worked on importing data from the experiments, and fitting simulated curves to the experimental curves. From there we could get an r-squared value and see which simulation gave us the best fitted curve with adjusted D and F values. This is done by running each simulation with different D’s and F’s and finding the best simulation with the most fit curve. 
 
-**Output**  
+**Output:**  
 
 The user is then given a graph in .png form of the best fit graph, along with the D,F, and r-squared values for reporting.
 
