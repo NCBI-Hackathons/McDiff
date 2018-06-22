@@ -34,6 +34,14 @@ Overview Diagram
 
 # Methods
 ![mcdiff monte carlo diffusion](https://user-images.githubusercontent.com/30201026/41798320-771963fe-762a-11e8-98c4-97516595d894.png)
+Programing Methods:
+We started by getting comfortable with the experiments that were running in the nucleus. We then started going over the matlab and mathematica script that originally ran this program, with the lack of simulation. 
+We started in on programing by working on our parsing functions.
+Then we had the outline of the simulated nucleus and populated the nucleus with the simulated particles. 
+We ran into a roadblock when the simulation of movement within the nucleus was taking a long time ~ 10 minutes. We found that the we could speed it up by almost x100 by using a vector library within the shapely library. Shapely is used to outline the nucleus and simulate the walls. 
+Once we had a simulation of the nucleus we started work on plotting the nucleus simulation results. 
+Then we worked on importing data from the experiments, and fitting simulated curves to the experimental curves. From there we could get an r-squared value and see which simulation gave us the best fitted curve with adjusted D and F values. This is done by running each simulation with different D’s and F’s and finding the best simulation with the most fit curve.
+
 
 # File structure diagram 
 #### _Define paths, variable names, etc_
@@ -50,6 +58,9 @@ McDiff should be installed directly from Github.
 ### Configuration
 
 ```Examples here```
+System requirements: python 3.6.5 
+Libraries: shapely, matplotlib, descartes, numpy, random
+
 
 # Testing
 
