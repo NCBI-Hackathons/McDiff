@@ -37,10 +37,6 @@ Programing Methods:
   Once we had a simulation of the nucleus we started work on plotting the nucleus simulation results.   
   Then we worked on importing data from the experiments, and fitting simulated curves to the experimental curves. From there we could get an r-squared value and see which simulation gave us the best fitted curve with adjusted D and F values.   This is done by running each simulation with different D’s and F’s and finding the best simulation with the most fit curve.
 
-
-# File structure diagram 
-#### _Define paths, variable names, etc_
-
 # Installation options:
 
 McDiff should be installed directly from Github.
@@ -53,7 +49,7 @@ McDiff should be installed directly from Github.
 `$git clone https://github.com/NCBI-Hackathons/McDiff.git`
 ```
 
-### Configuration
+### Configuration and dependencies
  
 System requirements: python 3.6.5  
   Libraries: shapely, matplotlib, descartes, numpy, random
