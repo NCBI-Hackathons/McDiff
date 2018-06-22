@@ -66,3 +66,48 @@ def parse_data(data, offset):
 data_pre, data = parse_data("1.31.18_GFPP1_Hela_1min_002.csv")
 plt.plot(data[0,:], data[1,:], ".")
 plt.show()
+
+#1. initialize 12,000
+#
+#
+def D_2_x(D, h):
+    x = np.sqrt((2*D*h))
+    return x
+
+
+x = np.random.normal(mu, sigma, l) * (((np.random.uniform(0, 1, l) > 0.5)*2) - 1)
+
+
+def update_positions(points, mu, sigma, nucleus):
+    l = len(points)
+    x = np.random.normal(mu, sigma, l)
+    y = np.random.normal(mu, sigma, l)
+    fx = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
+    fy = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
+    x *= fx
+    y *= fy
+    points_new = np.zeros((2, l))
+    points_new[0,:] += points[0,:] + x
+    points_new[1,:] += points[1,:] + y
+    out_nuc = nucleus.contains(points_new) == False
+    points_new[0,out_nuc] = points[0,out_nuc]
+    points_new[1,out_nuc] = points[1,out_nuc]
+
+
+
+
+
+
+
+
+
+def simualte(D, f_mobile, f_bleached, nucleus, roi):
+    dt = 0.1 #ms 0.19 or 0.16 in other code
+    microns_2_pixels = .08677
+    N = 12000
+    x = D_2_x(D, h)
+    points = initialize_points #positions of all points
+    in_roi = roi.contains(points) #return a boolean mask
+    out_roi = in_roi == False
+    N_sim = (N - np.sum(in_roi)) * f_mobile #N = (N*f_mobile) - (in_roi * f_mobile)
+    points = points[out_roi][:N_sim]
