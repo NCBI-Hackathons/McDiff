@@ -20,8 +20,19 @@ nuc = Polygon(list(zip(mask[0,:], mask[1,:])))
 
 data_pre, data = parse_data("1.31.18_GFPP1_Hela_1min_002.csv", 10.5)
 #check_inside(IV, a)
+data_norm = data[1,:] / np.mean(data_pre[1,:])
 
-points, stuck = simulate(50, 0.5, 0.5, nuc, roi, 500)
+sim_len = 650
+np.random.seed(1200)
+
+points, stuck, roi_pre = simulate(6.69, 0.57, 0.5, nuc, roi, sim_len)
+
+stuck_norm = stuck / roi_pre
+stuck_time = np.arange(sim_len+1) * 0.1
+plt.plot(stuck_time, stuck_norm)
+plt.plot(data[0,:], data_norm)
+
+
 #testing pieces of the simulation
 # f_mobile = .5
 # dt = 0.1 #ms 0.19 or 0.16 in other code
