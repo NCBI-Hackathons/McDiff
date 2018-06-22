@@ -21,7 +21,7 @@ nuc = Polygon(list(zip(mask[0,:], mask[1,:])))
 data_pre, data = parse_data("1.31.18_GFPP1_Hela_1min_002.csv", 10.5)
 #check_inside(IV, a)
 
-points, stuck = simulate(50, 0.5, 0.5, nuc, roi)
+points, stuck = simulate(50, 0.5, 0.5, nuc, roi, 500)
 #testing pieces of the simulation
 # f_mobile = .5
 # dt = 0.1 #ms 0.19 or 0.16 in other code
@@ -50,4 +50,23 @@ points, stuck = simulate(50, 0.5, 0.5, nuc, roi)
 # points_new = np.zeros((2, l))
 # points_new[0,:] += pointz[0,:] + x
 # points_new[1,:] += pointz[1,:] + y
+#
+
+
+
+
+#space to play with shapely.vectorized
+
+#
+# import shapely.vectorized
+# minx,miny,maxx,maxy = nuc.bounds
+# x = np.random.uniform(minx, maxx, 100)
+# y = np.random.uniform(miny, maxy, 100)
+# pnts = np.zeros((2, 100))
+# pnts[0,:] = x
+# pnts[1,:] = y
+# # shapely.vectorized.contains(nuc, x, y)
+# c1 = check_inside(pnts, nuc)
+# c2 = check_fast(pnts, nuc)
+# c1 == c2
 #

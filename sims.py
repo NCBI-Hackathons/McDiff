@@ -57,29 +57,33 @@ def check_inside(points, poly):
     return a
 
 
-def update_positions(points, mu, sigma, nucleus, roi):
-    l = len(points[0,:])
+def check_fast(points, poly):
+    return shapely.vectorized.contains(poly, points[0,:], points[1,:])
+
+
+def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
+    l = len(x_cord)
     x = np.random.normal(mu, sigma, l)
     y = np.random.normal(mu, sigma, l)
     fx = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
     fy = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
     x *= fx
     y *= fy
-    points_new = np.zeros((2, l))
-    points_new[0,:] += points[0,:] + x
-    points_new[1,:] += points[1,:] + y
+    x_new = x_cord + x
+    y_new = y_cord + y
     #if you kicked a protein outside the nucleus, restore to initial position
-    out_nuc = check_inside(points_new, nucleus) == False
-    points_new[0,out_nuc] = points[0,out_nuc]
-    points_new[1,out_nuc] = points[1,out_nuc]
+    # out_nuc = check_inside(points_new, nucleus) == False
+    out_nuc = shapely.vectorized.contains(nuc, x_new, y_new) == False
+    x_new = x_new[out_nuc]
+    y_new = y_new[out_nuc]
     #now check if you have particles stuck in the middle
-    in_roi = check_inside(points_new, roi)
+    in_roi = shapely.vectorized.contains(roi, x_new, y_new)
     out_roi = in_roi == False
     N_stuck = np.sum(in_roi)
-    return points_new[:, out_roi], N_stuck
+    return x_new, y_new, N_stuck
 
 
-def simulate(D, f_mobile, f_bleached, nuc, roi):
+def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
     h = 0.1 #ms 0.19 or 0.16 in other code
     microns_2_pixels = .08677
     N = 12000
@@ -91,8 +95,10 @@ def simulate(D, f_mobile, f_bleached, nuc, roi):
     stuck *= f_bleached
     N_sim = int((N - stuck) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
     points = points[:,out_roi][:,0:N_sim]
-    for i in range(50):
-        points, points_stuck = update_positions(points, 10, 0.01, nuc, roi)
+    x = points[0,:]
+    y = points[1,:]
+    for i in range(runtime):
+        x, y, points_stuck = update_positions(x, y, 10, 0.01, nuc, roi)
         stuck += points_stuck
         print(i)
     return points, stuck
