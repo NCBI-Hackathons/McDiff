@@ -1,3 +1,4 @@
+![Packagist](https://img.shields.io/badge/python-3.6.5-orange.svg)
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)
 ![Packagist](https://img.shields.io/badge/Hackathon-in--progress-orange.svg)
 
