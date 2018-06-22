@@ -11,8 +11,6 @@ Before the implementation of this program, biologists would have to run either a
 # Keywords
  Free Diffusion Constant, Nucleus, Fluorescence Accumulation after DNA Damage (FADD)  
 
-### You can make a free DOI with zenodo <link>
-
 ## Website (if applicable)
 
 
@@ -62,7 +60,7 @@ We tested McDiff with the sample files found in the main directory. These files 
 
 2. [Outline of Nucleus](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002NuclMask.txt "Outline of Nucleus")    
 
-3.[Region of Intrest](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt "Region of Intrest")     
+3. [Region of Intrest](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt "Region of Intrest")     
  
 # Additional Functionality
   
