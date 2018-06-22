@@ -19,6 +19,7 @@ Before the implementation of this program, biologists would have to run either a
 Overview Diagram
 
 # How to use McDiff
+`$python3 sims.py` ```possibly put input files into this``` 
 
 # Software Workflow Diagram
 
@@ -44,7 +45,7 @@ McDiff should be installed directly from Github.
 
 ### Installing McDiff from Github
 
-1. `git clone https://github.com/NCBI-Hackathons/McDiff.git`
+1. `$git clone https://github.com/NCBI-Hackathons/McDiff.git`
 2. Edit the configuration files as below
 
 ### Configuration
@@ -68,8 +69,8 @@ We tested McDiff with the sample files found in the main directory. These files 
 
 There is also a Docker image for hosting the main website. This should only be used for debug purposes.
 
-  1. `git clone https://github.com/NCBI-Hackathons/<this software>.git`
-  2. `cd Website`
-  3. `docker build --rm -t <this software>/website .`
-  4. `docker run -t -i <this software>/website`
+  1. `$git clone https://github.com/NCBI-Hackathons/<this software>.git`
+  2. `$cd Website`
+  3. `$docker build --rm -t <this software>/website .`
+  4. `$docker run -t -i <this software>/website`
   
