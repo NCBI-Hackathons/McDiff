@@ -61,10 +61,11 @@ We tested McDiff with the sample files found in the main directory. These files 
 
 2. [Outline of Nucleus](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002NuclMask.txt "Outline of Nucleus")    
 
-3. [Region of Intrest](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt "Region of Intrest")     
+3. [Region of Interest](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt "Region of Intrest")     
  
-# Additional Functionality
-  
+# License
+This project is licensed under the MIT License - see the LICENSE file for details
+
 ### Website
 
 There is also a Docker image for hosting the main website. This should only be used for debug purposes.
