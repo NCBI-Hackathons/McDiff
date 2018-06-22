@@ -1,12 +1,12 @@
 #actaully do some simulations
 exec(open("sims.py").read())
 
-f = "1.31.18_GFPP1_Hela_1min_002NuclMask.txt"
+f = "./test_files/1.31.18_GFPP1_Hela_1min_002NuclMask.txt"
 mask = parse_mask(f)
 
 # IV = generate_random_points(12000, a)
 
-roi = "1.31.18_GFPP1_Hela_1min_002ROI.txt"
+roi = "./test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt"
 d = parse_roi(roi)
 
 roi = Polygon([(d[0], d[1]), (d[0], d[1]+d[3]), (d[0]+d[2], d[1]+d[3]), (d[0]+d[2], d[1])])
@@ -18,14 +18,14 @@ nuc = Polygon(list(zip(mask[0,:], mask[1,:])))
 # ring = PolygonPatch(roi_points)
 # ax.add_patch(ring)
 
-data_pre, data = parse_data("1.31.18_GFPP1_Hela_1min_002.csv", 10.5)
+data_pre, data = parse_data("./test_files/1.31.18_GFPP1_Hela_1min_002.csv", 10.5)
 #check_inside(IV, a)
 data_norm = data[1,:] / np.mean(data_pre[1,:])
 
 sim_len = 650
 np.random.seed(1200)
 
-points, stuck, roi_pre = simulate(6.69, 0.57, 0.5, nuc, roi, sim_len)
+stuck, roi_pre = simulate(6.69, 0.57, 0.5, nuc, roi, sim_len)
 
 stuck_norm = stuck / roi_pre
 stuck_time = np.arange(sim_len+1) * 0.1

@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from shapely.geometry import Point, LineString
 from shapely.geometry.polygon import Polygon
 from descartes import PolygonPatch
+from shapely import geometry
+
 
 exec(open("initialize_points_w.py", 'r').read())
 
@@ -45,6 +47,16 @@ def parse_data(data, offset):
     x2[0,:] -= offset
     return x1, x2
 
+
+def generate_random_points(N, poly):
+	list_of_points = np.zeros((2, N))
+	minx,miny,maxx,maxy = poly.bounds
+	counter = 0
+	x = np.random.uniform(minx, maxx, N*3)
+	y = np.random.uniform(miny, maxy, N*3)
+	innie = shapely.vectorized.contains(poly, x, y)
+	return x[innie][:N], y[innie][:N]
+
 def D_2_x(D, h):
     x = np.sqrt((2*D*h))
     return x
@@ -76,8 +88,8 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
     microns_2_pixels = .08677
     N = 12000
     dx = D_2_x(D, h) * (microns_2_pixels ** 2)
-    points = generate_random_points(12000, nuc) #positions of all points
-    in_roi = shapely.vectorized.contains(roi, points[0,:], points[1,:]) #return a boolean mask
+    x, y = generate_random_points(12000, nuc) #positions of all points
+    in_roi = shapely.vectorized.contains(roi, x, y) #return a boolean mask
     out_roi = in_roi == False
     N0_roi = np.sum(in_roi)
     print(N0_roi)
@@ -89,9 +101,11 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
     N_sim = int((N - stuck) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
     # print(N_sim)
     # print(points.shape)
-    points = points[:,out_roi][:,0:N_sim]
-    x = points[0,:]
-    y = points[1,:]
+    # points = points[:,out_roi][:,0:N_sim]
+    x = x[out_roi][:N_sim]
+    y = y[out_roi][:N_sim]
+    # x = points[0,:]
+    # y = points[1,:]
     # print(len(x))
     for i in range(1,runtime+1):
         x, y, points_stuck = update_positions(x, y, dx, 0.001, nuc, roi)
@@ -99,4 +113,4 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
         all_stuck[i] = stuck
         # print(i)
         #print(len(x))
-    return points, all_stuck, N0_roi
+    return all_stuck, N0_roi
