@@ -36,6 +36,7 @@ Before the implementation of this program, biologists would have to run either a
   
 # Output
 You will get a .png of the best fit simulation over your experimental data, the D and F coeficients and the r-squared error value for the simulation that was best.
+****Get Example output
 
 
 # Software Workflow Diagram
