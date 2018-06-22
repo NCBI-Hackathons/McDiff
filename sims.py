@@ -62,13 +62,13 @@ def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
     #if you kicked a protein outside the nucleus, restore to initial position
     # out_nuc = check_inside(points_new, nucleus) == False
     out_nuc = shapely.vectorized.contains(nucleus, x_new, y_new) == False
-    x_new = x_new[out_nuc]
-    y_new = y_new[out_nuc]
+    x_new[out_nuc] = x_cord[out_nuc]
+    y_new[out_nuc] = y_cord[out_nuc]
     #now check if you have particles stuck in the middle
     in_roi = shapely.vectorized.contains(roi, x_new, y_new)
     out_roi = in_roi == False
     N_stuck = np.sum(in_roi)
-    return x_new, y_new, N_stuck
+    return x_new[out_roi], y_new[out_roi], N_stuck
 
 
 def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
@@ -81,15 +81,20 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
     out_roi = in_roi == False
     stuck = np.sum(in_roi)
     stuck *= f_bleached
+    # print(stuck)
     all_stuck = np.zeros(runtime)
     all_stuck[0] = stuck
     N_sim = int((N - stuck) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
+    # print(N_sim)
+    # print(points.shape)
     points = points[:,out_roi][:,0:N_sim]
     x = points[0,:]
     y = points[1,:]
+    # print(len(x))
     for i in range(runtime):
         x, y, points_stuck = update_positions(x, y, 10, 0.01, nuc, roi)
         stuck += points_stuck
         all_stuck[i] = stuck
-        print(i)
+        # print(i)
+        print(len(x))
     return points, all_stuck
