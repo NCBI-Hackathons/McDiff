@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from shapely.geometry import Point, LineString
 from shapely.geometry.polygon import Polygon
+from shapely.vectorized import contains
 from descartes import PolygonPatch
 
 exec(open("initialize_points_w.py", 'r').read())
@@ -50,8 +51,9 @@ def D_2_x(D, h):
 
 def check_inside(points, poly):
     a = np.zeros(len(points[0,:]), dtype = bool)
+    ps = np.array([Point(points[0,i], points[1,i]) for i in range(points.size//2)], dtype=object)
     for i in range(len(a)):
-        a[i] = poly.contains(Point(points[0,i], points[1,i]))
+        a[i] = poly.contains(ps[i])
     return a
 """
 def check_recursion(points, poly):
@@ -75,7 +77,7 @@ def update_positions(points, mu, sigma, nucleus, roi):
     points_new = np.zeros((2, l))
     points_new[0,:] += points[0,:] + x
     points_new[1,:] += points[1,:] + y
-    #if you kicked a protien(ein?) outside the nucleus, restore to initial position
+    #if you kicked a protein outside the nucleus, restore to initial position
     out_nuc = check_inside(points_new, nucleus) == False
     points_new[0,out_nuc] = points[0,out_nuc]
     points_new[1,out_nuc] = points[1,out_nuc]
@@ -97,7 +99,7 @@ def simulate(D, f_mobile, f_bleached, nuc, roi):
     stuck = np.sum(in_roi)
     stuck *= f_bleached
     N_sim = int((N - stuck) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
-    pointz = points[:,out_roi][:,0:N_sim]
+    points = points[:,out_roi][:,0:N_sim]
     for i in range(50):
         points, points_stuck = update_positions(points, 10, 0.01, nuc, roi)
         stuck += points_stuck
