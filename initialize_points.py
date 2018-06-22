@@ -17,5 +17,5 @@ def generate_random_points(number, poly):
 			list_of_points.append(p)
 			counter += 1
 	return list_of_points
-	
+
 print generate_random_points(numParticles, poly)
