@@ -16,18 +16,19 @@ Before the implementation of this program, biologists would have to run either a
 
 # What is McDiff?
 
-Overview Diagram
+![mcdiff monte carlo diffusion 1](https://user-images.githubusercontent.com/30201026/41800946-0bad625e-7635-11e8-9a17-afce8f03d06c.png)
+![mcdiff monte carlo diffusion 2](https://user-images.githubusercontent.com/30201026/41800952-0fce1f22-7635-11e8-8ab3-c5c58d4ffb62.png)
+![mcdiff monte carlo diffusion 3](https://user-images.githubusercontent.com/30201026/41800955-11ce0652-7635-11e8-89ba-8d115953c38b.png)
+![mcdiff monte carlo diffusion 4](https://user-images.githubusercontent.com/30201026/41800960-13e82648-7635-11e8-8c7f-f38291615545.png)
 
 # How to use McDiff
-`$python3 sims.py` ```possibly put input files into this``` 
+`$python3 sims.py`
 
 # Software Workflow Diagram
 
 ![initial_flowchart_mcdiff](https://user-images.githubusercontent.com/23224399/41737510-beb45eb4-754c-11e8-816c-8720f1ae12e1.png)
 
 ## Methods
-
-[MCDiff (Monte Carlo Diffusion).pdf](https://github.com/NCBI-Hackathons/McDiff/files/2129231/MCDiff.Monte.Carlo.Diffusion.pdf)
 
 Programing Methods:  
   We started by getting comfortable with the experiments that were running in the nucleus. We then started going over the matlab and mathematica script that originally ran this program, with the lack of simulation.   
@@ -48,6 +49,8 @@ McDiff should be installed directly from Github.
 # Clone the repo
 `$git clone https://github.com/NCBI-Hackathons/McDiff.git`
 ```
+
+That's it! You should be ready to run.
 
 ### Configuration and dependencies
  
