@@ -26,7 +26,9 @@ Overview Diagram
 ![initial_flowchart_mcdiff](https://user-images.githubusercontent.com/23224399/41737510-beb45eb4-754c-11e8-816c-8720f1ae12e1.png)
 
 ## Methods
-![mcdiff monte carlo diffusion](https://user-images.githubusercontent.com/30201026/41798320-771963fe-762a-11e8-98c4-97516595d894.png)
+
+[MCDiff (Monte Carlo Diffusion).pdf](https://github.com/NCBI-Hackathons/McDiff/files/2129231/MCDiff.Monte.Carlo.Diffusion.pdf)
+
 Programing Methods:  
   We started by getting comfortable with the experiments that were running in the nucleus. We then started going over the matlab and mathematica script that originally ran this program, with the lack of simulation.   
   We started in on programing by working on our parsing functions.  
@@ -61,10 +63,11 @@ We tested McDiff with the sample files found in the main directory. These files 
 
 2. [Outline of Nucleus](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002NuclMask.txt "Outline of Nucleus")    
 
-3. [Region of Intrest](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt "Region of Intrest")     
+3. [Region of Interest](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt "Region of Intrest")     
  
-# Additional Functionality
-  
+# License
+This project is licensed under the MIT License - see the LICENSE file for details
+
 ### Website
 
 There is also a Docker image for hosting the main website. This should only be used for debug purposes.
