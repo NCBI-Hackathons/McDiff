@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from shapely.geometry import Point, LineString
+from shapely.geometry.polygon import Polygon
 
 def parse_mask(x):
     with open(x) as f:
@@ -15,6 +17,19 @@ def parse_mask(x):
 
 f = "1.31.18_GFPP1_Hela_1min_002NuclMask.txt"
 mask = parse_mask(f)
+
+a = LineString(list(zip(mask[0,:], mask[1,:])))
+x, y = a.xy
+plt.plot(x, y, "g.")
+plt.plot(mask[0,:], mask[1,:], "b.", alpha = .1)
+a = Polygon(list(zip(mask[0,:], mask[1,:])))
+#sanity check
+a.contains(Point(250, 250))
+a.contains(Point(250, 2000))
+#
+
+
+#check that we get the same shape
 
 def parse_roi(x):
     with open(x) as f:
