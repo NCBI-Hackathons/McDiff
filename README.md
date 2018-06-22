@@ -11,7 +11,6 @@ Before the implementation of this program, biologists would have to run either a
 # Keywords
  Free Diffusion Constant, Nucleus, Fluorescence Accumulation after DNA Damage (FADD)
 
-
 ## Please cite our work -- here is the ICMJE Standard Citation:
 
 ### ...and a link to the DOI:
@@ -32,6 +31,9 @@ Overview Diagram
 # Software Workflow Diagram
 
 ![initial_flowchart_mcdiff](https://user-images.githubusercontent.com/23224399/41737510-beb45eb4-754c-11e8-816c-8720f1ae12e1.png)
+
+# Methods
+![mcdiff monte carlo diffusion](https://user-images.githubusercontent.com/30201026/41798320-771963fe-762a-11e8-98c4-97516595d894.png)
 
 # File structure diagram 
 #### _Define paths, variable names, etc_
