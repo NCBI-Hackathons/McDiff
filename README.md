@@ -26,7 +26,9 @@ Overview Diagram
 ![initial_flowchart_mcdiff](https://user-images.githubusercontent.com/23224399/41737510-beb45eb4-754c-11e8-816c-8720f1ae12e1.png)
 
 ## Methods
-![mcdiff monte carlo diffusion](https://user-images.githubusercontent.com/30201026/41798320-771963fe-762a-11e8-98c4-97516595d894.png)
+
+[MCDiff (Monte Carlo Diffusion).pdf](https://github.com/NCBI-Hackathons/McDiff/files/2129231/MCDiff.Monte.Carlo.Diffusion.pdf)
+
 Programing Methods:  
   We started by getting comfortable with the experiments that were running in the nucleus. We then started going over the matlab and mathematica script that originally ran this program, with the lack of simulation.   
   We started in on programing by working on our parsing functions.  
