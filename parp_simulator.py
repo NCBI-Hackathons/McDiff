@@ -48,6 +48,16 @@ From parpsimulator.m:
     %   
 """
 
+def wrapper(data_file, roi_file, mask_file, properties) #properties are user definined, like time, bleach factor
+
+	sim = simulation(parse_mask(shapefile),parse_roi(roi_file)) #should get time, effective diffusion, mobile fraction, bleached fraction
+	
+	#in fit data you get fitted parameters: mparpfrac, meanstepsize, equivDiffCoeff, rsqaured, best fit simulated time error, best fit intesity vector
+	fitData = parameterSweep(properties, mask_file, roi_file, data_file)
+	
+	graph = make_plot()
+	
+	return graph, fitData
 
 
 

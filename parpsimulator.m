@@ -26,16 +26,16 @@ classdef parpsimulator
         
         %Simulation parameters
         pxSize = 0.08677;      %Physical size of grid in microns/pixel
-        deltaT = 0.19;         %Physical size of time step seconds/time step
+        deltaT = 0.19;         %Physical size of time step seconds/time step change to .16
         
         %Parameters to fit
-        meanStepSize = 16.80;  %Mean particle step size in pixels/time step
-        mparpFrac = 25;        %Percent fraction of mobile PARP
+        meanStepSize = 16.80;  %Mean particle step size in pixels/time step <--
+        mparpFrac = 25;        %Percent fraction of mobile PARP <--
         unbleachedFrac = 46;     %Percent fraction of photobleached particles
         
         %Simulation parameters
         numParticles = 12000;  %Number of simulated particles
-        numSteps = 500;        %Number of simulation time steps
+        numSteps = 500;        %Number of simulation time steps <--relates to time
         particleMotion = 'lattice'; %Type of particle motion ('2D' or 'circular')
         initialPositions = 'random'; %Initial position of particles
         
