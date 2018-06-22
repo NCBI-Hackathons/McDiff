@@ -71,13 +71,19 @@ def check_fast(points, poly):
 
 
 def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
+
     l = len(x_cord)
-    x = np.random.normal(mu, sigma, l)
-    y = np.random.normal(mu, sigma, l)
-    fx = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
-    fy = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
-    x *= fx
-    y *= fy
+    #x = np.random.normal(mu, sigma, l)
+    #y = np.random.normal(mu, sigma, l)
+    #fx = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
+    #fy = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
+    #need uniform angle, guasian distance, transfer to x y via trig
+    #x *= fx
+    #y *= fy
+    theta = np.random.normal(0,2*np.pi,l)
+    dist = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
+    x = (np.cos(theta)*dist)
+    y = (np.sin(theta)*dist)
     x_new = x_cord + x
     y_new = y_cord + y
     #if you kicked a protein outside the nucleus, restore to initial position
