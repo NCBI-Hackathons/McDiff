@@ -1,8 +1,8 @@
 import numpy as np
+import shapely.vectorized
 import matplotlib.pyplot as plt
 from shapely.geometry import Point, LineString
 from shapely.geometry.polygon import Polygon
-from shapely.vectorized import contains
 from descartes import PolygonPatch
 
 exec(open("initialize_points_w.py", 'r').read())
@@ -49,27 +49,6 @@ def D_2_x(D, h):
     x = np.sqrt((2*D*h))
     return x
 
-def check_inside(points, poly):
-    a = np.zeros(len(points[0,:]), dtype = bool)
-    ps = np.array([Point(points[0,i], points[1,i]) for i in range(points.size//2)], dtype=object)
-    for i in range(len(a)):
-        a[i] = poly.contains(ps[i])
-    return a
-"""
-def check_recursion(points, poly):
-    if(len(points) != 0):
-
-        check_recursion(points, poly)
-    else:
-        return 0
-
-    return points
-    """
-
-def check_fast(points, poly):
-    return shapely.vectorized.contains(poly, points[0,:], points[1,:])
-
-
 def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
     l = len(x_cord)
     x = np.random.normal(mu, sigma, l)
@@ -82,7 +61,7 @@ def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
     y_new = y_cord + y
     #if you kicked a protein outside the nucleus, restore to initial position
     # out_nuc = check_inside(points_new, nucleus) == False
-    out_nuc = shapely.vectorized.contains(nuc, x_new, y_new) == False
+    out_nuc = shapely.vectorized.contains(nucleus, x_new, y_new) == False
     x_new = x_new[out_nuc]
     y_new = y_new[out_nuc]
     #now check if you have particles stuck in the middle
@@ -96,12 +75,14 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
     h = 0.1 #ms 0.19 or 0.16 in other code
     microns_2_pixels = .08677
     N = 12000
-    x = D_2_x(D, h)
+    x = D_2_x(D, h) * microns_2_pixels
     points = generate_random_points(12000, nuc) #positions of all points
-    in_roi = check_inside(points, roi)#return a boolean mask
+    in_roi = shapely.vectorized.contains(roi, points[0,:], points[1,:]) #return a boolean mask
     out_roi = in_roi == False
     stuck = np.sum(in_roi)
     stuck *= f_bleached
+    all_stuck = np.zeros(runtime)
+    all_stuck[0] = stuck
     N_sim = int((N - stuck) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
     points = points[:,out_roi][:,0:N_sim]
     x = points[0,:]
@@ -109,5 +90,6 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
     for i in range(runtime):
         x, y, points_stuck = update_positions(x, y, 10, 0.01, nuc, roi)
         stuck += points_stuck
+        all_stuck[i] = stuck
         print(i)
-    return points, stuck
+    return points, all_stuck
