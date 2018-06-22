@@ -30,7 +30,13 @@ Before the implementation of this program, biologists would have to run either a
 ![mcdiff monte carlo diffusion 4](https://user-images.githubusercontent.com/30201026/41800960-13e82648-7635-11e8-8c7f-f38291615545.png)
 
 # How to use McDiff
-`$python3 sims.py`
+`$python3 sims.py mask_file ROI_file data_file` 
+
+  Where `mask_file` is the file of the oultine of the nucleus `ROI_file` is the file for region of intrest and `data_file` is the file of the outputs from your FADD experiment.  
+  
+# Output
+You will get a .png of the best fit simulation over your experimental data, the D and F coeficients and the r-squared error value for the simulation that was best.
+
 
 # Software Workflow Diagram
 
@@ -55,7 +61,7 @@ McDiff should be installed directly from Github.
 ### Step 1:
 ```
 # Clone the repo
-`$git clone https://github.com/NCBI-Hackathons/McDiff.git`
+$git clone https://github.com/NCBI-Hackathons/McDiff.git
 ```
 
 That's it! You should be ready to run.
