@@ -3,7 +3,7 @@
 
 # McDiff
 A Monte Carlo Approach for Estimating Diffusion Coefficients   
-This would be used by a cell biologist to get the coeficeint of free diffusion, and raction of protien that accumulates at the region of intrest within a cell.  
+This would be used by a cell biologist to get the coeficeint of free diffusion, and fraction of protien that accumulates at the region of intrest within a cell.  
 `$python3 sims.py mask_file ROI_file data_file`  
   
   Where `mask_file` is the file of the oultine of the nucleus `ROI_file` is the file for region of intrest and `data_file` is the file of the outputs from your FADD experiment.
