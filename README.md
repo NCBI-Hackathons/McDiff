@@ -47,8 +47,11 @@ McDiff should be installed directly from Github.
 
 ### Installing McDiff from Github
 
-1. `$git clone https://github.com/NCBI-Hackathons/McDiff.git`
-2. Edit the configuration files as below
+### Step 1:
+```
+# Clone the repo
+`$git clone https://github.com/NCBI-Hackathons/McDiff.git`
+```
 
 ### Configuration
  
