@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from shapely.geometry import Point, LineString
 from shapely.geometry.polygon import Polygon
 
+exec(open("initialize_points_w.py", 'r').read())
+
 def parse_mask(x):
     with open(x) as f:
         a = f.read()
@@ -18,8 +20,8 @@ def parse_mask(x):
 f = "1.31.18_GFPP1_Hela_1min_002NuclMask.txt"
 mask = parse_mask(f)
 
-a = LineString(list(zip(mask[0,:], mask[1,:])))
-x, y = a.xy
+a1 = LineString(list(zip(mask[0,:], mask[1,:])))
+x, y = a1.xy
 plt.plot(x, y, "g.")
 plt.plot(mask[0,:], mask[1,:], "b.", alpha = .1)
 a = Polygon(list(zip(mask[0,:], mask[1,:])))
@@ -27,8 +29,9 @@ a = Polygon(list(zip(mask[0,:], mask[1,:])))
 a.contains(Point(250, 250))
 a.contains(Point(250, 2000))
 #
-
-
+IV = generate_random_points(12000, a)
+plt.plot(IV[0,:], IV[1,:], "r.", ms = 1.)
+#show initial points
 #check that we get the same shape
 
 def parse_roi(x):
