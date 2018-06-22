@@ -93,6 +93,15 @@ def D_2_x(D, h):
     return x
 
 
+
+def check_inside(points, poly):
+    a = np.zeros(len(points[0,:]))
+    for i in range(len(a)):
+        a[i] = poly.contains(Point(points[0,i], points[1,i]))
+    return a
+
+check_inside(IV, a)
+
 x = np.random.normal(mu, sigma, l) * (((np.random.uniform(0, 1, l) > 0.5)*2) - 1)
 
 
