@@ -55,7 +55,16 @@ def check_inside(points, poly):
     for i in range(len(a)):
         a[i] = poly.contains(ps[i])
     return a
+"""
+def check_recursion(points, poly):
+    if(len(points) != 0):
 
+        check_recursion(points, poly)
+    else:
+        return 0
+
+    return points
+    """
 
 def check_fast(points, poly):
     return shapely.vectorized.contains(poly, points[0,:], points[1,:])
