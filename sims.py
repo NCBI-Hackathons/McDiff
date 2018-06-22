@@ -66,7 +66,7 @@ def update_positions(points, mu, sigma, nucleus, roi):
     points_new = np.zeros((2, l))
     points_new[0,:] += points[0,:] + x
     points_new[1,:] += points[1,:] + y
-    #if you kicked a protien(ein?) outside the nucleus, restore to initial position
+    #if you kicked a protein outside the nucleus, restore to initial position
     out_nuc = check_inside(points_new, nucleus) == False
     points_new[0,out_nuc] = points[0,out_nuc]
     points_new[1,out_nuc] = points[1,out_nuc]
@@ -88,7 +88,7 @@ def simulate(D, f_mobile, f_bleached, nuc, roi):
     stuck = np.sum(in_roi)
     stuck *= f_bleached
     N_sim = int((N - stuck) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
-    pointz = points[:,out_roi][:,0:N_sim]
+    points = points[:,out_roi][:,0:N_sim]
     for i in range(50):
         points, points_stuck = update_positions(points, 10, 0.01, nuc, roi)
         stuck += points_stuck
