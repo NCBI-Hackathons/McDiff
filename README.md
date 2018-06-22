@@ -4,10 +4,10 @@
 
 # McDiff
 A Monte Carlo Approach for Estimating Diffusion Coefficients   
-This would be used by a cell biologist to get the coeficeint of free diffusion, and fraction of protien that accumulates at the region of intrest within a cell.  
+This would be used by a cell biologist to get the coeficeint of free diffusion, and fraction of protein that accumulates at the region of interest within a cell.  
 `$python3 sims.py mask_file ROI_file data_file`  
   
-  Where `mask_file` is the file of the oultine of the nucleus `ROI_file` is the file for region of intrest and `data_file` is the file of the outputs from your FADD experiment.
+  Where `mask_file` is the file of the outline of the nucleus `ROI_file` is the file for region of interest and `data_file` is the file of the outputs from your FADD experiment.
 
 # Abstract
 Cell biologists can study the recruitment of DNA repair proteins to sites of DNA damage in live cells by using laser micro-irradiation to induce damage, which is known as Fluorescence Accumulation after DNA Damage (FADD). By monitoring the time-dependent accumulation of proteins at the sites of damage, or region of interest (ROI), the biologists then aim to calculate the coefficient of free diffusion (D) of each molecule of interest within the nucleus. This code simulates particles freely diffusing within a cell nucleus using a Monte Carlo model, becoming trapped at the ROI. Our code then seeks to optimize the best Diffusion constant (D) and fraction of protein that accumulates (F), and creates a heatmap for the best fit by using r-squared values comparing a fit to the data.
@@ -22,12 +22,6 @@ Before the implementation of this program, biologists would have to run either a
 ## Website (if applicable)
 
 
-# What is McDiff?
-
-![mcdiff monte carlo diffusion 1](https://user-images.githubusercontent.com/30201026/41800946-0bad625e-7635-11e8-9a17-afce8f03d06c.png)
-![mcdiff monte carlo diffusion 2](https://user-images.githubusercontent.com/30201026/41800952-0fce1f22-7635-11e8-8ab3-c5c58d4ffb62.png)
-![mcdiff monte carlo diffusion 3](https://user-images.githubusercontent.com/30201026/41800955-11ce0652-7635-11e8-89ba-8d115953c38b.png)
-![mcdiff monte carlo diffusion 4](https://user-images.githubusercontent.com/30201026/41800960-13e82648-7635-11e8-8c7f-f38291615545.png)
 
 # How to use McDiff
 `$python3 sims.py mask_file ROI_file data_file` 
@@ -38,6 +32,7 @@ Before the implementation of this program, biologists would have to run either a
 You will get a .png of the best fit simulation over your experimental data, the D and F coeficients and the r-squared error value for the simulation that was best.
 ****Get Example output
 
+# Assumption
 
 # Software Workflow Diagram
 
