@@ -40,15 +40,15 @@ You will get a .png of the best fit simulation over your experimental data, the 
 
 ## Methods
 
-**Warm-up:  
+**Warm-up:**  
 
 We started by getting comfortable with the experiments that were being performed in the nucleus. We then reviewed the existing Matlab and Mathematica scripts that originally ran this program, although with the lack of simulation to find optimal parameters.  
 
-**Parsing/ Setup functions: 
+**Parsing/ Setup functions:** 
 
 We uploaded the outline of the simulated nucleus. We then populated the nucleus with a gaussian distributed collection of simulated particles.  This is done by creating a square region around the nucleus. Then 36,000 particles are placed in the square; they are checked for localization within or without the nucleus and the first 12,000 points localized within the nucleus are used for the simulation. This implementation is ~10x faster than placing individual points and checking for their inclusion in the nucleus.   
 
-**Simulation:  
+**Simulation:**  
 
 The simulation starts with all of the point in the nucleus, then the region of interest (ROI) is placed within the nucleus. We then calculate the percent of particles that are considered to be immobile, as for some cells, there are some proteins that are not free to move. Then within the ROI we calculate the percent that will not be read by the camera in the experiment because they will be bleached.  Once this setup is complete we can start to have the mobile particles move.  
 
@@ -61,7 +61,7 @@ Once we had a simulation of particles moving in the nucleus, we started work on 
 
 Then we worked on importing data from the experiments, and fitting simulated curves to the experimental curves. From there we could get an r-squared value and see which simulation gave us the best fitted curve with adjusted D and F values. This is done by running each simulation with different D’s and F’s and finding the best simulation with the most fit curve. 
 
-**Output  
+**Output**  
 
 The user is then given a graph in .png form of the best fit graph, along with the D,F, and r-squared values for reporting.
 
