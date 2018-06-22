@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from shapely.geometry import Point, LineString
 from shapely.geometry.polygon import Polygon
+from shapely.vectorized import contains
 from descartes import PolygonPatch
 
 exec(open("initialize_points_w.py", 'r').read())
@@ -50,8 +51,9 @@ def D_2_x(D, h):
 
 def check_inside(points, poly):
     a = np.zeros(len(points[0,:]), dtype = bool)
+    ps = np.array([Point(points[0,i], points[1,i]) for i in range(points.size//2)], dtype=object)
     for i in range(len(a)):
-        a[i] = poly.contains(Point(points[0,i], points[1,i]))
+        a[i] = poly.contains(ps[i])
     return a
 
 
