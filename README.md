@@ -9,13 +9,7 @@ Cell biologists can study the recruitment of DNA repair proteins to sites of DNA
 Before the implementation of this program, biologists would have to run either a mathematica or matlab scripts where each single simulation is run with manually entered coefficients. Quality of the fit to the experimental data was evaluated by visual inspection by the biologist. If the simulation was not aligned with the experimental data, then the biologist would change their coefficient values, then re-run the script and see if those values fit better, a tedious and labor-intensive process. Our new implementation runs simulations with multiple coefficients and calculates an r-squared error value that represents a best fit sample. Then the biologist can use that simulation, and be given the proper coefficients with the proper error.
 
 # Keywords
- Free Diffusion Constant, Nucleus, Fluorescence Accumulation after DNA Damage (FADD)
-
-## Please cite our work -- here is the ICMJE Standard Citation:
-
-### ...and a link to the DOI:
-
-## Awesome Logo
+ Free Diffusion Constant, Nucleus, Fluorescence Accumulation after DNA Damage (FADD)  
 
 ### You can make a free DOI with zenodo <link>
 
