@@ -53,7 +53,16 @@ def check_inside(points, poly):
     for i in range(len(a)):
         a[i] = poly.contains(Point(points[0,i], points[1,i]))
     return a
+"""
+def check_recursion(points, poly):
+    if(len(points) != 0):
 
+        check_recursion(points, poly)
+    else:
+        return 0
+
+    return points
+    """
 
 def update_positions(points, mu, sigma, nucleus, roi):
     l = len(points[0,:])
