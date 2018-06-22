@@ -75,14 +75,16 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
     h = 0.1 #ms 0.19 or 0.16 in other code
     microns_2_pixels = .08677
     N = 12000
-    x = D_2_x(D, h) * microns_2_pixels
+    dx = D_2_x(D, h) * (microns_2_pixels ** 2)
     points = generate_random_points(12000, nuc) #positions of all points
     in_roi = shapely.vectorized.contains(roi, points[0,:], points[1,:]) #return a boolean mask
     out_roi = in_roi == False
-    stuck = np.sum(in_roi)
-    stuck *= f_bleached
+    N0_roi = np.sum(in_roi)
+    print(N0_roi)
+    stuck = N0_roi * f_bleached
+    print(stuck)
     # print(stuck)
-    all_stuck = np.zeros(runtime)
+    all_stuck = np.zeros(runtime+1)
     all_stuck[0] = stuck
     N_sim = int((N - stuck) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
     # print(N_sim)
@@ -91,10 +93,10 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
     x = points[0,:]
     y = points[1,:]
     # print(len(x))
-    for i in range(runtime):
-        x, y, points_stuck = update_positions(x, y, 10, 0.01, nuc, roi)
+    for i in range(1,runtime+1):
+        x, y, points_stuck = update_positions(x, y, dx, 0.001, nuc, roi)
         stuck += points_stuck
         all_stuck[i] = stuck
         # print(i)
-        print(len(x))
-    return points, all_stuck
+        #print(len(x))
+    return points, all_stuck, N0_roi
