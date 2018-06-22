@@ -1,3 +1,5 @@
+![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)
+
 # McDiff
 A Monte Carlo Approach for Estimating Diffusion Coefficients (add example use case)
 
