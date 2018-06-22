@@ -9,7 +9,8 @@ mask = parse_mask(f)
 roi = "./test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt"
 d = parse_roi(roi)
 
-roi = Polygon([(d[0], d[1]), (d[0], d[1]+d[3]), (d[0]+d[2], d[1]+d[3]), (d[0]+d[2], d[1])])
+# roi = Polygon([(d[0], d[1]), (d[0], d[1]+d[3]), (d[0]+d[2], d[1]+d[3]), (d[0]+d[2], d[1])])
+roi = Polygon([(d[1], d[0]), (d[1], d[0]+d[2]), (d[1]+d[3], d[0]+d[2]), (d[1]+d[3], d[0])])
 nuc = Polygon(list(zip(mask[0,:], mask[1,:])))
 
 # fig, ax = plt.subplots(1)
@@ -25,12 +26,13 @@ data_norm = data[1,:] / np.mean(data_pre[1,:])
 sim_len = 650
 np.random.seed(1200)
 
-stuck, roi_pre = simulate(6.69, 0.57, 0.5, nuc, roi, sim_len)
+stuck, roi_pre = simulate(6.69, 0.43 , 0.5, nuc, roi, sim_len)
 
 stuck_norm = stuck / roi_pre
 stuck_time = np.arange(sim_len+1) * 0.1
 plt.plot(stuck_time, stuck_norm)
 plt.plot(data[0,:], data_norm)
+
 
 
 #testing pieces of the simulation
