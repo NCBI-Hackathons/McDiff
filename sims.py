@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from shapely.geometry import Point, LineString
 from shapely.geometry.polygon import Polygon
+from descartes import PolygonPatch
 
 exec(open("initialize_points_w.py", 'r').read())
 
@@ -17,22 +18,6 @@ def parse_mask(x):
         d[1,i] = float(c[i][1])
     return d
 
-f = "1.31.18_GFPP1_Hela_1min_002NuclMask.txt"
-mask = parse_mask(f)
-
-a1 = LineString(list(zip(mask[0,:], mask[1,:])))
-x, y = a1.xy
-plt.plot(x, y, "g.")
-plt.plot(mask[0,:], mask[1,:], "b.", alpha = .1)
-a = Polygon(list(zip(mask[0,:], mask[1,:])))
-#sanity check
-a.contains(Point(250, 250))
-a.contains(Point(250, 2000))
-#
-IV = generate_random_points(12000, a)
-plt.plot(IV[0,:], IV[1,:], "r.", ms = 1.)
-#show initial points
-#check that we get the same shape
 
 def parse_roi(x):
     with open(x) as f:
@@ -43,17 +28,6 @@ def parse_roi(x):
         d[i] = float(b[i])
     return d
 
-roi = "1.31.18_GFPP1_Hela_1min_002ROI.txt"
-d = parse_roi(roi)
-
-plt.plot(mask[0,:], mask[1,:], ".")
-plt.plot(d[0], d[1], ".")
-plt.plot(d[0] + d[2], d[1], ".")
-plt.plot(d[0], d[1] + d[3], ".")
-plt.plot(d[0] + d[2], d[1] + d[3], ".")
-
-#first 6 frames nothing happens
-#
 
 def parse_data(data, offset):
     with open(data, 'r') as f:
@@ -70,43 +44,19 @@ def parse_data(data, offset):
     x2[0,:] -= offset
     return x1, x2
 
-# def parse_data(data):
-#     with open(data, 'r') as f:
-#         a = f.read()
-#     b = a.split('\n')
-#     d = np.zeros((2, len(b)-5))
-#     for i in range(len(b)-5):
-#         c = b[i+4].split(',')
-#         d[0,i] = float(c[0])
-#         d[1,i] = float(c[11])
-#     return d
-
-data_pre, data = parse_data("1.31.18_GFPP1_Hela_1min_002.csv")
-plt.plot(data[0,:], data[1,:], ".")
-plt.show()
-
-#1. initialize 12,000
-#
-#
 def D_2_x(D, h):
     x = np.sqrt((2*D*h))
     return x
 
-
-
 def check_inside(points, poly):
-    a = np.zeros(len(points[0,:]))
+    a = np.zeros(len(points[0,:]), dtype = bool)
     for i in range(len(a)):
         a[i] = poly.contains(Point(points[0,i], points[1,i]))
     return a
 
-check_inside(IV, a)
 
-x = np.random.normal(mu, sigma, l) * (((np.random.uniform(0, 1, l) > 0.5)*2) - 1)
-
-
-def update_positions(points, mu, sigma, nucleus):
-    l = len(points)
+def update_positions(points, mu, sigma, nucleus, roi):
+    l = len(points[0,:])
     x = np.random.normal(mu, sigma, l)
     y = np.random.normal(mu, sigma, l)
     fx = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
@@ -116,25 +66,31 @@ def update_positions(points, mu, sigma, nucleus):
     points_new = np.zeros((2, l))
     points_new[0,:] += points[0,:] + x
     points_new[1,:] += points[1,:] + y
-    out_nuc = nucleus.contains(points_new) == False
+    #if you kicked a protien(ein?) outside the nucleus, restore to initial position
+    out_nuc = check_inside(points_new, nucleus) == False
     points_new[0,out_nuc] = points[0,out_nuc]
     points_new[1,out_nuc] = points[1,out_nuc]
+    #now check if you have particles stuck in the middle
+    in_roi = check_inside(points_new, roi)
+    out_roi = in_roi == False
+    N_stuck = np.sum(in_roi)
+    return points_new[:, out_roi], N_stuck
 
 
-
-
-
-
-
-
-
-def simualte(D, f_mobile, f_bleached, nucleus, roi):
-    dt = 0.1 #ms 0.19 or 0.16 in other code
+def simulate(D, f_mobile, f_bleached, nuc, roi):
+    h = 0.1 #ms 0.19 or 0.16 in other code
     microns_2_pixels = .08677
     N = 12000
     x = D_2_x(D, h)
-    points = initialize_points #positions of all points
-    in_roi = roi.contains(points) #return a boolean mask
+    points = generate_random_points(12000, nuc) #positions of all points
+    in_roi = check_inside(points, roi)#return a boolean mask
     out_roi = in_roi == False
-    N_sim = (N - np.sum(in_roi)) * f_mobile #N = (N*f_mobile) - (in_roi * f_mobile)
-    points = points[out_roi][:N_sim]
+    stuck = np.sum(in_roi)
+    stuck *= f_bleached
+    N_sim = int((N - stuck) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
+    pointz = points[:,out_roi][:,0:N_sim]
+    for i in range(50):
+        points, points_stuck = update_positions(points, 10, 0.01, nuc, roi)
+        stuck += points_stuck
+        print(i)
+    return points, stuck
