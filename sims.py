@@ -7,7 +7,7 @@ from descartes import PolygonPatch
 from shapely import geometry
 
 
-exec(open("initialize_points_w.py", 'r').read())
+# exec(open("initialize_points_w.py", 'r').read())
 
 def parse_mask(x):
     with open(x) as f:
