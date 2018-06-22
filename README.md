@@ -1,5 +1,5 @@
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)
-![Packagist]https://img.shields.io/badge/Hacked-Kinda-orange.svg
+![Packagist](https://img.shields.io/badge/Hacked-Kinda-orange.svg)
 
 # McDiff
 A Monte Carlo Approach for Estimating Diffusion Coefficients (add example use case)
