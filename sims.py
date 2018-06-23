@@ -133,3 +133,56 @@ def compute_error(data, data_norm, stuck_time, stuck_norm):
 
     # error /= len(times)
     return error #np.sqrt(error)
+
+
+def MCMC(D0, f_mobile0, f_bleached, nuc, roi, runtime, N, sigma):
+    s2 = 2*sigma**2.
+    all_params = np.zeros((2, N+1))
+    all_params[0,0] = D0
+    all_params[1,0] = f_mobile0
+    errores = np.zeros(N+1)
+    x, y, stuck, roi_pre, x_stuck, y_stuck = simulate(D0, f_mobile0, 0.5, nuc, roi, sim_len)
+    stuck_norm = stuck / roi_pre
+    stuck_time = np.arange(sim_len+1) * 0.1
+    error = compute_error(data, data_norm, stuck_time, stuck_norm)
+    chi2 = np.sum(error)
+    errores[0] = chi2
+    old_params = [D0, f_mobile0]
+    for i in range(N):
+        new_params[0] = old_params[0] + np.random.normal(0, 1) #sample from the proposal distribution
+        new_params[1] = old_params[1] + np.random.normal(0, 0.1)
+        cnt = 0
+        breakage = False
+        while (new_params[1] > 1) | (new_params[1] < 0):
+            new_params[1] = old_params[1] + np.random.normal(0, 0.1)
+            cnt += 1
+            if cnt > 100:
+                breakage = True
+                break
+        if breakage == True:
+            return old_params, errores, all_params
+        else:
+            # all_params[0,i] = new_params[0]
+            # all_params[1,i] = new_params[1]
+            x, y, stuck, roi_pre, x_stuck, y_stuck = simulate(D0, f_mobile0, 0.5, nuc, roi, sim_len)
+            stuck_norm = stuck / roi_pre
+            stuck_time = np.arange(sim_len+1) * 0.1
+            error = compute_error(data, data_norm, stuck_time, stuck_norm)
+            chi2_new = np.sum(error)
+            if chi2_new  < chi:
+                old_params = new_params
+                chi2 = chi2_new
+                all_params[0,i] = new_params[0]
+                all_params[1,i] = new_params[1]
+            else:
+                coin = np.random.uniform()
+                r = np.exp(chi2 - chi2_new)/s2 #likelihood function
+                if coin < r:
+                    old_params = new_params
+                    chi2 = chi2_new
+                    all_params[0,i] = new_params[0]
+                    all_params[1,i] = new_params[1]
+                else:
+                    all_params[0,i] = old_params[0]
+                    all_params[1,i] = old_params[1]
+    return old_params, errores, all_params
