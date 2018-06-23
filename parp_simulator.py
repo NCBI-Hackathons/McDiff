@@ -102,6 +102,15 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     for i in range(len(E)):
         text = "{0} {1} {2}\n".format(E[i], AP[0,i], AP[1,i])
         newfile.write(fit_data_name)
+        
+    fig, ax = plt.subplots(1)
+    interpf = interp1d(stuck_time, stuck_norm)
+    predict = interpf(data[0,:])
+    plt.plot(data[0,:], predict - data_norm, '.')
+    plt.plot(np.linspace(0, max(data[0,:]), len(data[0,:])), np.zeros(len(data[0,:])),'-')
+    plt.savefig(resid_plot_name)
+
+
 
 
     N = 50
@@ -112,7 +121,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     D, F, ret_error = rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, bound_d)
 
 
-	return fit_plot_name, fit_data_name, D_final, F_final, ret_error
+	return fit_plot_name, resid_plot_name, fit_data_name, D_final, F_final, ret_error
 
 
 
