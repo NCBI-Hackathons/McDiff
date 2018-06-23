@@ -31,8 +31,8 @@ Before the implementation of this program, biologists would have to run either a
 # Output
 You will get a .png of the best fit simulation over your experimental data, the D and F coeficients and the r-squared error value for the simulation that was best.
 
-![we had something good...not anymore](![init_image](https://user-images.githubusercontent.com/30201026/41812786-d9e3bfd6-76e6-11e8-8b31-050b379c57bf.png)
-)
+![init_image](https://user-images.githubusercontent.com/30201026/41813001-517b8bb6-76ea-11e8-859e-ebc81040bf80.png)
+
 
 ****Get Example output
 
