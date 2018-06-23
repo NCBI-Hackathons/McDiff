@@ -73,11 +73,12 @@ McDiff should be installed directly from Github.
 
 ### Step 1:
 ```
-# Clone the repo
-$git clone https://github.com/NCBI-Hackathons/McDiff.git
+# Clone the repo and move into it
+$ git clone https://github.com/NCBI-Hackathons/McDiff.git
+$ cd McDiff
 ```
 
-That's it! You should be ready to run.
+That's it! You're in the right folder and should be ready to run.
 
 ### Configuration and dependencies
  
@@ -98,8 +99,6 @@ We tested McDiff with the sample files found in the main directory. These files 
 This project is licensed under the MIT License - see the LICENSE file for details
 
 ### Website
-
-There is also a Docker image for hosting the main website. This should only be used for debug purposes.
 
   1. `$git clone https://github.com/NCBI-Hackathons/<this software>.git`
   2. `$cd Website`
