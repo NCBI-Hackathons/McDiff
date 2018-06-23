@@ -47,7 +47,7 @@ From parpsimulator.m:
     %   %Run the simulation with default settings
     %
 """
-
+import os.path
 def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps):
     #exp_time is the sim_len but dont want the user to have to do the calcualations
     #default sigmaD =2    parameters in the mcmc
@@ -97,11 +97,14 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     ax[3].plot(Error)
     #figure to return
     plt.savefig(fit_plot_name)
-    #CSV to return to the user, as in simulated data results
-    newfile = open("MCMC_results.txt", 'w')
+    #CSV to return to the user, as in simulated data results saved in results
+    save_path = 'C:/GitHub/app/static/results'
+    newfile = open(data_file+"MCMC_results.csv", 'w')
     for i in range(len(E)):
         text = "{0} {1} {2}\n".format(E[i], AP[0,i], AP[1,i])
         newfile.write(fit_data_name)
+    #trying here to attach the data_file name onto return results name
+    os.path.join(save_path, data_file+"MCMC_results.csv")
 
     fig, ax = plt.subplots(1)
     interpf = interp1d(stuck_time, stuck_norm)
@@ -114,7 +117,6 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     fmax = 1
     dmin = 0
     D_final, F_final, ret_error = rand_sam(percent_bleached, nuc, roi, mcmc_steps, fmin, fmax, dmin, bound_d)
-
 
 	return fit_plot_name, resid_plot_name, fit_data_name, D_final, F_final, ret_error
 
