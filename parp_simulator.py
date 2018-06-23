@@ -121,8 +121,8 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
 
 
 def main(args):
-
-    wrapper(data_file, roi_file, mask_file, bounds_f, bounds_d, exp_time, sigmaD, sigmaF temp, offset, mcmc_steps)
+    input('Please input in this order: \n data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps', data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps )
+    wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps)
     return 0
 
 if __name__ == '__main__':
