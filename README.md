@@ -1,4 +1,5 @@
 ![Packagist](https://img.shields.io/badge/python-3.6.5-orange.svg)
+![Packagist](https://img.shields.io/depfu/depfu/example-ruby.svg)
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)
 ![Packagist](https://img.shields.io/badge/Hackathon-in--progress-orange.svg)
 
@@ -48,7 +49,7 @@ Before the implementation of this program, biologists would have to run either a
 # Keywords
  Free Diffusion Constant, Nucleus, Fluorescence Accumulation after DNA Damage (FADD)  
 
-## Website 
+# Website 
 
 
 
@@ -97,7 +98,7 @@ Then we worked on importing data from the experiments, and fitting simulated cur
 
 **Output:**  
 
-The user is then given a graph in .png form of the best fit graph, along with the D,F, and r-squared values for reporting.
+The user is then given a graph in .png form of the best fit graph, along with the D,F, and error values for reporting.
 
 # Installation options:
 

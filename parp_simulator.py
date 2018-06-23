@@ -54,7 +54,7 @@ import optimization  #exec(open('sims.py').read())
 import matplotlib.pyplot as plt
 
 
-def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps):
+def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps, file_name):
     #exp_time is the sim_len but dont want the user to have to do the calcualations
     #default sigmaD =2    parameters in the mcmc - int
     #default sigmaf =.05  parameters in the mcmc - float
@@ -93,14 +93,14 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
 
     lo_mejor = Error.argmin() #index of parameter optimal
     los_mejores = AP[:, lo_mejor] #best parameters
-    epx_time = int(exp_time/.18) #translate time to steps
+    exp_time = int(exp_time/.18) #translate time to steps
 
     stuck_in_roi, roi_pre = sims.simulate(los_mejores[0], los_mejores[1], percent_bleached, nuc, roi, exp_time)
 
     stuck_norm = stuck_in_roi / roi_pre
     stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
 
-    fig, ax = plt.subplots(1)
+    fig, ax = plt.subplots(4)
     ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
     ax[0].plot(data[0,:], data_norm, ".", label = "Data")
     ax[0].legend()
@@ -113,14 +113,14 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     plt.savefig(fit_plot_name)
     #CSV to return to the user, as in simulated data results saved in results
     save_path = 'C:/GitHub/app/static/'
-    newfile = open(data_file+"MCMC_results.csv", 'w')
+    newfile = open(file_name+"MCMC_results.csv", 'w')
     for i in range(len(E)):
         text = "{0} {1} {2}\n".format(E[i], AP[0,i], AP[1,i])
         newfile.write(fit_data_name)
     #trying here to attach the data_file name onto return results name
-    os.path.join(save_path+'/results', data_file+"_MCMC_results.csv")
-    print(data_file+"_MCMC_results.csv")
-    resid_plot_name = datafile+'_resid_plot'
+    os.path.join(save_path+'/results', file_name+"_MCMC_results.csv")
+    #print(data_file+"_MCMC_results.csv")
+    resid_plot_name = file_name+'_resid_plot'
     fig, ax = plt.subplots(1)
     interpf = interp1d(stuck_time, stuck_norm)
     predict = interpf(data[0,:])
@@ -143,13 +143,13 @@ def main(args):
     mask_file = "./test_files/1.31.18_GFPP1_Hela_1min_002NuclMask.txt"
     roi_file = "./test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt"
     data_file = "./test_files/1.31.18_GFPP1_Hela_1min_002.csv"
-    bound_d = 20
-    exp_time = 60
+    bound_d = 12
+    exp_time = 30
     sigmaD = 2
     sigmaF = .05
     mcmc_temp = 1
     offset = 10.5
-    mcmc_steps = 200
+    mcmc_steps = 50
     percent_bleached = .56
 
     #data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps = input('Please input in this order: \n data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps' )
