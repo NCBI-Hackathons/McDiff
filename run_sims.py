@@ -29,7 +29,7 @@ np.random.seed(1200)
 x0, y0 = init_sim(12000, nuc)
 
 #########################MCMC
-# 
+#
 # sigmaD = 2.
 # sigmaF = .05
 # N = 150
@@ -68,12 +68,17 @@ results[2,x]
 stuck_norm = simulate(results[0,x], results[1,x], 0.5, nuc, roi, sim_len, x0, y0)
 stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
 error = compute_error(data, data_norm, stuck_time, stuck_norm)
-plt.plot(stuck_time, stuck_norm, ".", label = "Simulation")
-plt.plot(data[0,:], data_norm, ".", label = "Data")
-plt.legend()
-plt.xlabel("Time (s)")
-plt.ylabel("Fraction of Proteins Bound/Baseline")
-plt.show()
+fig, ax = plt.subplot(2)
+ax[0].scatter(results[0,:], results[1,:], ms = 10., results[2,:])
+ax[1].plot(stuck_time, stuck_norm, ".", label = "Simulation")
+ax[1].plot(data[0,:], data_norm, ".", label = "Data")
+ax[1].legend()
+ax[1].xlabel("Time (s)")
+ax[1].ylabel("Fraction of Proteins Bound/Baseline")
+ax[1].show()
+
+
+
 
     # newfile = open("MCMC_results.txt", 'w')
     # for i in range(len(E)):

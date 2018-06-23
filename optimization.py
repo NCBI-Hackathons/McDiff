@@ -24,7 +24,7 @@ def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, 
     all_params[1,0] = f_mobile0
     errores = np.zeros(N+1) #store error
     stuck_norm = sims.simulate(D0, f_mobile0, 0.5, nuc, roi, sim_len, x0, y0) #do a simulation
-    stuck_time = np.arange(sim_len+1) * 0.1
+    stuck_time = np.arange(sim_len+1) * 0.18
     error = sims.compute_error(data, data_norm, stuck_time, stuck_norm)
     chi2 = np.sum(error)
     errores[0] = chi2
@@ -37,7 +37,7 @@ def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, 
             return old_params, errores, all_params, b1, b2, i
         else:
             stuck_norm = sims.simulate(new_params[0], new_params[1], 0.5, nuc, roi, sim_len, x0, y0)
-            stuck_time = np.arange(sim_len+1) * 0.1
+            stuck_time = np.arange(sim_len+1) * 0.18
             error = sims.compute_error(data, data_norm, stuck_time, stuck_norm)
             chi2_new = np.sum(error)
             if chi2_new  < chi2:
@@ -70,7 +70,7 @@ def rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, x0, y0):
     E = np.zeros(N)
     for i in range(N):
         stuck_norm = simulate(D[i], F[i], f_bleached, nuc, roi, sim_len, x0, y0)
-        stuck_time = np.arange(sim_len+1) * 0.1
+        stuck_time = np.arange(sim_len+1) * 0.18
         error = compute_error(data, data_norm, stuck_time, stuck_norm)
         E[i] = np.sum(error)
     return D, F, E
