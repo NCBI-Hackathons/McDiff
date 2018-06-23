@@ -1,11 +1,10 @@
 import numpy as np
-import shapely.vectorized
 import matplotlib.pyplot as plt
 from shapely.geometry import Point, LineString
 from shapely.geometry.polygon import Polygon
 from descartes import PolygonPatch
 from shapely import geometry
-
+import shapely.vectorized
 
 # exec(open("initialize_points_w.py", 'r').read())
 
@@ -80,7 +79,7 @@ def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
     in_roi = shapely.vectorized.contains(roi, x_new, y_new)
     out_roi = in_roi == False
     N_stuck = np.sum(in_roi)
-    return x_new[out_roi], y_new[out_roi], N_stuck
+    return x_new[out_roi], y_new[out_roi], x_new[in_roi], y_new[in_roi]
 
 
 def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
@@ -102,15 +101,21 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
     # print(N_sim)
     # print(points.shape)
     # points = points[:,out_roi][:,0:N_sim]
+    x_stuck = []
+    y_stuck = []
+    x_stuck.extend(x[in_roi])
+    y_stuck.extend(y[in_roi])
     x = x[out_roi][:N_sim]
     y = y[out_roi][:N_sim]
     # x = points[0,:]
     # y = points[1,:]
     # print(len(x))
     for i in range(1,runtime+1):
-        x, y, points_stuck = update_positions(x, y, dx, 0.001, nuc, roi)
-        stuck += points_stuck
+        x, y, xs, ys = update_positions(x, y, dx, 0.001, nuc, roi)
+        stuck += len(xs)
         all_stuck[i] = stuck
+        x_stuck.extend(xs)
+        y_stuck.extend(ys)
         # print(i)
         #print(len(x))
-    return all_stuck, N0_roi
+    return x, y, all_stuck, N0_roi, x_stuck, y_stuck

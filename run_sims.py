@@ -26,14 +26,26 @@ data_norm = data[1,:] / np.mean(data_pre[1,:])
 sim_len = 650
 np.random.seed(1200)
 
-stuck, roi_pre = simulate(6.69, 0.43 , 0.5, nuc, roi, sim_len)
+x, y, stuck, roi_pre, x_stuck, y_stuck = simulate(6.69, 0.43 , 0.5, nuc, roi, sim_len)
 
 stuck_norm = stuck / roi_pre
 stuck_time = np.arange(sim_len+1) * 0.1
-plt.plot(stuck_time, stuck_norm)
-plt.plot(data[0,:], data_norm)
 
+# fig, ax = plt.subplots(1)
+# ax.plot(stuck_time, stuck_norm, ".", label = "Simulation")
+# ax.plot(data[0,:], data_norm, ".", label = "Data")
+# ax.legend()
+# ax.set_xlabel("Time (s)")
+# ax.set_ylabel("Fraction of Protiens Bound/Baseline")
+# plt.show()
 
+# fig, ax = plt.subplots(1)
+# ax.plot(mask[0,:], mask[1,:], ".")
+# ring = PolygonPatch(roi)
+# ax.add_patch(ring)
+# plt.plot(x, y, "r.", ms = 1.)
+# plt.plot(x_stuck, y_stuck, "r.", ms = 1.)
+# plt.show()
 
 #testing pieces of the simulation
 # f_mobile = .5
