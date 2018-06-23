@@ -119,3 +119,17 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
         # print(i)
         #print(len(x))
     return x, y, all_stuck, N0_roi, x_stuck, y_stuck
+
+def compute_error(data, data_norm, stuck_time, stuck_norm):
+    times = np.zeros(len(data[0,:]))
+    y_ = np.zeros(len(times))
+    error = np.zeros(len(times))
+    for i in range(len(times)):
+        dx = (np.abs(stuck_time - data[0,i])).argmin()
+        times[i] = stuck_time[dx]
+        y_[i] = stuck_norm[dx]
+        #error += (stuck_norm[dx] - data[1,i])**2.
+        error[i] = (stuck_norm[dx] - data_norm[i])**2.
+
+    # error /= len(times)
+    return error #np.sqrt(error)
