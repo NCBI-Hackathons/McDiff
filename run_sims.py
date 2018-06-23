@@ -41,12 +41,12 @@ stuck, roi_pre = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, sim_len
 stuck_norm = stuck / roi_pre
 stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
 
-fig, ax = plt.subplots(1)
-ax.plot(stuck_time, stuck_norm, ".", label = "Simulation")
-ax.plot(data[0,:], data_norm, ".", label = "Data")
-ax.legend()
-ax.set_xlabel("Time (s)")
-ax.set_ylabel("Fraction of Protiens Bound/Baseline")
+fig, ax = plt.subplots(4)
+ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
+ax[0].plot(data[0,:], data_norm, ".", label = "Data")
+ax[0].legend()
+ax[0].set_xlabel("Time (s)")
+ax[0].set_ylabel("Fraction of Protiens Bound/Baseline")
 plt.show()
 
     # newfile = open("MCMC_results.txt", 'w')
@@ -64,3 +64,15 @@ plt.show()
 # plt.plot(x, y, "r.", ms = 1.)
 # plt.plot(x_stuck, y_stuck, "r.", ms = 1.)
 # plt.show()
+
+
+
+############################# Random Sampling
+
+N = 50
+f_bleached = .46
+fmin = 0
+fmax = 1
+dmin = 0
+dmax = 20
+D, F, E = rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax)

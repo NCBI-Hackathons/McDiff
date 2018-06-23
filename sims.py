@@ -148,7 +148,7 @@ def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, 
     new_params = [0, 0]
     for i in range(1, N+1):
         new_params[0], b1 = proposal(old_params[0], sigma1, dmin, dmax)
-        new_params[1], b2 = proposal(old_params[1], sigma1, fmin, fmax)
+        new_params[1], b2 = proposal(old_params[1], sigma2, fmin, fmax)
         if (b1 == True) | (b2 == True):
             return old_params, errores, all_params, b1, b2, i
         else:
@@ -182,7 +182,14 @@ def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, 
     return old_params, errores, all_params, b1, b2, i
 
 
-#need to figure out how to calcualte f and thus restrict parameter space based on largest value of data, possibly normalized differently
-#uniform random grid is ~ D = np.random.uniform(0, 20, N)
-#f ~ np.random.uniform(min, 1, N)
-# def random_sample()
+def rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax):
+    D = np.random.uniform(dmin, dmax, N)
+    F = np.random.uniform(fmin, fmax, N)
+    E = np.zeros(N)
+    for i in range(N):
+        stuck, roi_pre = simulate(D[i], F[i], f_bleached, nuc, roi, sim_len)
+        stuck_norm = stuck / roi_pre
+        stuck_time = np.arange(sim_len+1) * 0.1
+        error = compute_error(data, data_norm, stuck_time, stuck_norm)
+        E[i] = np.sum(error)
+    return D, F, E
