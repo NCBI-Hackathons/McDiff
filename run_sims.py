@@ -46,7 +46,7 @@ ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
 ax[0].plot(data[0,:], data_norm, ".", label = "Data")
 ax[0].legend()
 ax[0].set_xlabel("Time (s)")
-ax[0].set_ylabel("Fraction of Protiens Bound/Baseline")
+ax[0].set_ylabel("Fraction of Proteins Bound/Baseline")
 plt.show()
 
     # newfile = open("MCMC_results.txt", 'w')
