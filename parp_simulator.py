@@ -48,16 +48,26 @@ From parpsimulator.m:
     %
 """
 
-def wrapper(data_file, roi_file, mask_file, properties) #properties are user definined, like time, bleach factor
+def wrapper(data_file, roi_file, mask_file, bounds_f, bounds_d, sim_len, sigmaD, sigmaF temp, offset, mcmc_steps):
 
-	sim = simulation(parse_mask(shapefile),parse_roi(roi_file)) #should get time, effective diffusion, mobile fraction, bleached fraction
+    exec(open("sims.py").read())
 
-	# in  fit data you get fitted parameters: mparpfrac, meanstepsize, equivDiffCoeff, rsqaured, best fit simulated time error, best fit intesity vector
-	fitData = parameterSweep(properties, mask_file, roi_file, data_file)
+    #parse all data files then create the roi and the nucleus
+    mask = parse_mask(mask_file)
+    roi_cords = parse_roi(roi_file)
+    roi = Polygon([(roi_cords[1], roi_cords[0]), (roi_cords[1], roi_cords[0]+roi_cords[2]), (roi_cords[1]+d[3], roi_cords[0]+roi_cords[2]), (roi_cords[1]+roi_cords[3], roi_cords[0])])
+    nuc = Polygon(list(zip(mask[0,:], mask[1,:])))
 
-	graph = make_plot()
+    data_pre, data = parse_data(data_file, offset) # offset origianlly 10.5
+    data_norm = data[1,:] / np.mean(data_pre[1,:])
 
-	return graph, fitData
+    #sim_len = 650 recomended
+
+    ##MCMC: mcmc_steps = 200 suggestion
+
+    OP, E, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(20, .1, .5, nuc, roi, mcmc_steps, 1, sigmaD, sigmaF, 0, 1, 0, 20)
+
+	return fit_plot, D_final, F_final, error
 
 
 
