@@ -53,14 +53,14 @@ import sims, optimization  #exec(open('sims.py').read())
 
 def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps):
     #exp_time is the sim_len but dont want the user to have to do the calcualations
-    #default sigmaD =2    parameters in the mcmc
-    #default sigmaf =.05  parameters in the mcmc
-    #recomend/default  mcmc_steps = 200
-    #default bound_d = 20  the upper bound for the for you think d could possibly be
-    #default offset = 10.5
-    #default mcmc_temp = 1 when to calc likelyhood ratio, devide be estmate of noise ***NOT TEMPURATURE OF EXPERIMENT
-    #default percent_bleached = .54 that is when grean(gfp) is used, that is ammount that becomes bleached
-    #mcmc_steps = 200 suggestion
+    #default sigmaD =2    parameters in the mcmc - int
+    #default sigmaf =.05  parameters in the mcmc - float
+    #recomend/default  mcmc_steps = 200 - int
+    #default bound_d = 20  - int the upper bound for the for you think d could possibly be
+    #default offset = 10.5 - float
+    #default mcmc_temp = 1 - int  when to calc likelyhood ratio, devide be estmate of noise ***NOT TEMPURATURE OF EXPERIMENT
+    #default percent_bleached = .54 that is when grean(gfp) is used, that is ammount that becomes bleached - float
+    #mcmc_steps = 200 suggestion -int
 
     #parse all data files then create the roi and the nucleus
     mask = sims.parse_mask(mask_file)
