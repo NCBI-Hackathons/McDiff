@@ -98,20 +98,23 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     #figure to return
     plt.savefig(fit_plot_name)
     #CSV to return to the user, as in simulated data results saved in results
-    save_path = 'C:/GitHub/app/static/results'
+    save_path = 'C:/GitHub/app/static/'
     newfile = open(data_file+"MCMC_results.csv", 'w')
     for i in range(len(E)):
         text = "{0} {1} {2}\n".format(E[i], AP[0,i], AP[1,i])
         newfile.write(fit_data_name)
     #trying here to attach the data_file name onto return results name
-    os.path.join(save_path, data_file+"MCMC_results.csv")
+    os.path.join(save_path+'/results', data_file+"_MCMC_results.csv")
 
+    resid_plot_name = datafile+'_resid_plot'
     fig, ax = plt.subplots(1)
     interpf = interp1d(stuck_time, stuck_norm)
     predict = interpf(data[0,:])
     plt.plot(data[0,:], predict - data_norm, '.')
     plt.plot(np.linspace(0, max(data[0,:]), len(data[0,:])), np.zeros(len(data[0,:])),'-')
     plt.savefig(resid_plot_name)
+
+    os.path.join(savepath+'/graph', resid_plot_name)
 
     fmin = 0
     fmax = 1
