@@ -48,7 +48,10 @@ From parpsimulator.m:
     %
 """
 import os.path
-def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps):
+import numpy as np
+import sims, optimization  #exec(open('sims.py').read())
+
+def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps):
     #exp_time is the sim_len but dont want the user to have to do the calcualations
     #default sigmaD =2    parameters in the mcmc
     #default sigmaf =.05  parameters in the mcmc
@@ -57,31 +60,39 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     #default offset = 10.5
     #default mcmc_temp = 1 when to calc likelyhood ratio, devide be estmate of noise ***NOT TEMPURATURE OF EXPERIMENT
     #default percent_bleached = .54 that is when grean(gfp) is used, that is ammount that becomes bleached
-
-    exec(open("sims.py").read())
+    #mcmc_steps = 200 suggestion
 
     #parse all data files then create the roi and the nucleus
-    mask = parse_mask(mask_file)
-    roi_cords = parse_roi(roi_file)
-    roi = Polygon([(roi_cords[1], roi_cords[0]), (roi_cords[1], roi_cords[0]+roi_cords[2]), (roi_cords[1]+d[3], roi_cords[0]+roi_cords[2]), (roi_cords[1]+roi_cords[3], roi_cords[0])])
-    nuc = Polygon(list(zip(mask[0,:], mask[1,:])))
+    mask = sims.parse_mask(mask_file)
+    roi_cords = sims.parse_roi(roi_file)
+    roi = sims.Polygon([(roi_cords[1], roi_cords[0]), (roi_cords[1], roi_cords[0]+roi_cords[2]), (roi_cords[1]+roi_cords[3], roi_cords[0]+roi_cords[2]), (roi_cords[1]+roi_cords[3], roi_cords[0])])
+    nuc = sims.Polygon(list(zip(mask[0,:], mask[1,:])))
 
-    data_pre, data = parse_data(data_file, offset) # offset origianlly 10.5
+    data_pre, data = sims.parse_data(data_file, offset) # offset origianlly 10.5
     data_norm = data[1,:] / np.mean(data_pre[1,:])
 
-    #sim_len = 650 recomended
+    sim_len = 650 #recomended
 
     ##MCMC: mcmc_steps = 200 suggestion
 
-    OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bounds_d) #.18 is timestep
+    OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = optimization.MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bound_d) #.18 is timestep
     #bool_flag_1 and bool_flag_2 and interate ends are for debugging, if either is true then the simulation has gone wrong
 
+    #N = 50
+    #L = 10
+    #s1 = .9
+    #s2 = .9
+    #fmin = 0
+    #fmax = 1
+    #dmin = 0
+    #dmax = 20
+    #results = optimization.CF(percent_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, s1, s2, N, L)
 
     lo_mejor = Error.argmin() #index of parameter optimal
     los_mejores = AP[:, lo_mejor] #best parameters
     epx_time = int(exp_time/.18) #translate time to steps
 
-    stuck_in_roi, roi_pre = simulate(los_mejores[0], los_mejores[1], percent_bleached, nuc, roi, exp_time)
+    stuck_in_roi, roi_pre = sims.simulate(los_mejores[0], los_mejores[1], percent_bleached, nuc, roi, exp_time)
 
     stuck_norm = stuck_in_roi / roi_pre
     stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
@@ -105,7 +116,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
         newfile.write(fit_data_name)
     #trying here to attach the data_file name onto return results name
     os.path.join(save_path+'/results', data_file+"_MCMC_results.csv")
-
+    print(data_file+"_MCMC_results.csv")
     resid_plot_name = datafile+'_resid_plot'
     fig, ax = plt.subplots(1)
     interpf = interp1d(stuck_time, stuck_norm)
@@ -119,15 +130,27 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     fmin = 0
     fmax = 1
     dmin = 0
-    D_final, F_final, ret_error = rand_sam(percent_bleached, nuc, roi, mcmc_steps, fmin, fmax, dmin, bound_d)
+    D_final, F_final, ret_error = sims.rand_sam(percent_bleached, nuc, roi, mcmc_steps, fmin, fmax, dmin, bound_d)
 
-	return fit_plot_name, resid_plot_name, fit_data_name, D_final, F_final, ret_error
+    return fit_plot_name, resid_plot_name, fit_data_name, D_final, F_final, ret_error
 
 
 
 def main(args):
-    input('Please input in this order: \n data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps', data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps )
-    wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps)
+    mask_file = "./test_files/1.31.18_GFPP1_Hela_1min_002NuclMask.txt"
+    roi_file = "./test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt"
+    data_file = "./test_files/1.31.18_GFPP1_Hela_1min_002.csv"
+    bound_d = 20
+    exp_time = 60
+    sigmaD = 2
+    sigmaF = .05
+    mcmc_temp = 1
+    offset = 10.5
+    mcmc_steps = 200
+    percent_bleached = .56
+
+    #data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps = input('Please input in this order: \n data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps' )
+    wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps)
     return 0
 
 if __name__ == '__main__':
