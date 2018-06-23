@@ -1,0 +1,39 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 100px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 100px;
+  background-color: #373a3c;;
+  rgba(255,255,255,0.75);
+}
+.footer a {
+    color: #cfb87c;
+}
+.culogo {
+    margin-right:20px;
+}
+#banner {
+    padding-top: 30px;
+}
+.nav-link {
+    font-size:120%;
+}
+
+.navbar-dark .navbar-nav .nav-link, .navbar-dark .navbar-nav .nav-link:focus {
+  color: #fff;
+}
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+  color: #cfb87c;
+}
+.lead {
+    padding-bottom: 15px;
+}

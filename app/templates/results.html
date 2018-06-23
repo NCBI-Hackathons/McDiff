@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <img src="{{ filename }}"><br>
+    n<sub>a</sub>: {{ value1 }} <br>
+    n<sub>b</sub>: {{ value2 }} <br>
+    n<sub>ab</sub>: {{ value3 }} <br>
+    Interval Width: {{ width }} 
+    Bayesian repertoire overlap estimate: {{ expectation }}
+{% endblock %}
