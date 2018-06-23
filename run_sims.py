@@ -26,43 +26,54 @@ data_norm = data[1,:] / np.mean(data_pre[1,:])
 
 sim_len = 650
 np.random.seed(1200)
+x0, y0 = init_sim(12000, nuc)
 
 #########################MCMC
 
-# sigmaD = 2.
-# sigmaF = .05
-# N = 200
-# OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(20, .1, .5, nuc, roi, N, 1, sigmaD, sigmaF, 0, 1, 0, 20,sim_len, data, data_pre, data_norm))
-#
-# lo_mejor = Error.argmin() #index of parameter optimal
-# los_mejores = AP[:, lo_mejor] #best parameters
-#
-# stuck, roi_pre = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, sim_len)
-#
-# stuck_norm = stuck / roi_pre
-# stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
-#
-# fig, ax = plt.subplots(4)
-# ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
-# ax[0].plot(data[0,:], data_norm, ".", label = "Data")
-# ax[0].legend()
-# ax[0].set_xlabel("Time (s)")
-# ax[0].set_ylabel("Fraction of Proteins Bound/Baseline")
-# ax[1].hist(AP[0,:])
-# ax[2].hist(AP[1,:])
-# ax[3].plot(Error)
-# plt.show()
+sigmaD = 2.
+sigmaF = .05
+N = 150
+OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(20, .1, .5, nuc, roi, N, 1, sigmaD, sigmaF, 0, 1, 0, 20,sim_len, data, data_pre, data_norm, x0, y0)
 
-f_bleached = .54
-N = 50
-L = 10
-s1 = .9
-s2 = .9
-fmin = 0
-fmax = 1
-dmin = 0
-dmax = 20
-results = CF(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, s1, s2, N, L)
+lo_mejor = Error.argmin() #index of parameter optimal
+los_mejores = AP[:, lo_mejor] #best parameters
+
+stuck_norm = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, sim_len, x0, y0)
+
+stuck_time = np.arange(sim_len+1) * 0.1 #converts array indices into seconds
+
+fig, ax = plt.subplots(4)
+ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
+ax[0].plot(data[0,:], data_norm, ".", label = "Data")
+ax[0].legend()
+ax[0].set_xlabel("Time (s)")
+ax[1].hist(AP[0,:])
+ax[2].hist(AP[1,:])
+ax[3].plot(Error)
+plt.show()
+
+# f_bleached = .54
+# N = 50
+# L = 3
+# s1 = .1
+# s2 = .1
+# fmin = 0
+# fmax = 1
+# dmin = 0
+# dmax = 20
+# results = CF(f_bleached, nuc, roi, fmin, fmax, dmin, dmax, s1, s2, N, L, x0, y0)
+# x = results[2,:].argmin()
+# results[2,x]
+#
+# stuck_norm = simulate(results[0,x], results[1,x], 0.5, nuc, roi, sim_len, x0, y0)
+# stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
+# error = compute_error(data, data_norm, stuck_time, stuck_norm)
+# plt.plot(stuck_time, stuck_norm, ".", label = "Simulation")
+# plt.plot(data[0,:], data_norm, ".", label = "Data")
+# plt.legend()
+# plt.xlabel("Time (s)")
+# plt.ylabel("Fraction of Proteins Bound/Baseline")
+# plt.show()
 
     # newfile = open("MCMC_results.txt", 'w')
     # for i in range(len(E)):

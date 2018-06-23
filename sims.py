@@ -89,7 +89,7 @@ def init_sim(N, nuc):
     return x, y
 
 def simulate(D, f_mobile, f_bleached, nuc, roi, runtime, x0, y0):
-    h = 0.10 #ms 0.19 or 0.16 in other code
+    h = 0.18 #ms 0.19 or 0.16 in other code
     microns_2_pixels = .08677
     N = 12000
     dx = D_2_x(D, h) / microns_2_pixels # dx is in pixels
