@@ -29,7 +29,41 @@
       <br><span style="color: red;">[{{error}}]</span>
       {% endfor %}
     </p>
-
+    <p>
+      {{ form.bound_d.label }}: <br>
+      {{ form.bound_d() }}
+      {% for error in form.bound_d.errors %}
+      <br><span style="color: red;">[{{error}}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.exp_time.label }}: <br>
+      {{ form.exp_time() }}
+      {% for error in form.exp_time.errors %}
+      <br><span style="color: red;">[{{error}}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.sigma_d.label }}: <br>
+      {{ form.sigma_d() }}
+      {% for error in form.sigma_d.errors %}
+      <br><span style="color: red;">[{{error}}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.sigma_f.label }}: <br>
+      {{ form.sigma_f() }}
+      {% for error in form.sigma_f.errors %}
+      <br><span style="color: red;">[{{error}}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.mcmc_temp.label }}: <br>
+      {{ form.mcmc_temp() }}
+      {% for error in form.mcmc_temp.errors %}
+      <br><span style="color: red;">[{{error}}]</span>
+      {% endfor %}
+    </p>
     <p>
       {{ form.offset.label }}: <br>
       {{ form.offset() }}
