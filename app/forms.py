@@ -6,7 +6,7 @@ from werkzeug import secure_filename
 
 class FaddForm(FlaskForm):
 
-    photo = FileField(validators=[FileRequired(), FileAllowed('csv')])
+    csv = FileField(validators=[FileRequired(), FileAllowed(['csv'])])
     offset = FloatField('Offset', validators=[DataRequired(message="This field is required and must be an int between 0 and 60"), NumberRange(min=0, max=15)], render_kw={"value": "10.5"})
 
     steps = IntegerField('Steps', validators=[DataRequired(message="This field is required and must be an int between 0 and 600"), NumberRange(min=1, max=600)], render_kw={"value": "60"})
