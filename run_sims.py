@@ -48,6 +48,9 @@ ax[0].plot(data[0,:], data_norm, ".", label = "Data")
 ax[0].legend()
 ax[0].set_xlabel("Time (s)")
 ax[0].set_ylabel("Fraction of Proteins Bound/Baseline")
+ax[1].hist(AP[0,:])
+ax[2].hist(AP[1,:])
+ax[3].plot(Error)
 plt.show()
 
 
