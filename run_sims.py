@@ -1,5 +1,6 @@
 #actaully do some simulations
 exec(open('sims.py').read())
+exec(open('optimization.py').read())
 
 f = "./test_files/1.31.18_GFPP1_Hela_1min_002NuclMask.txt"
 mask = parse_mask(f)
@@ -49,13 +50,7 @@ ax[0].set_xlabel("Time (s)")
 ax[0].set_ylabel("Fraction of Proteins Bound/Baseline")
 plt.show()
 
-fig, ax = plt.subplots(4)
-ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
-ax[0].plot(data[0,:], data_norm, ".", label = "Data")
-ax[0].legend()
-ax[0].set_xlabel("Time (s)")
-ax[0].set_ylabel("Fraction of Proteins Bound/Baseline")
-plt.show()
+
 
     # newfile = open("MCMC_results.txt", 'w')
     # for i in range(len(E)):
@@ -77,10 +72,10 @@ plt.show()
 
 ############################# Random Sampling
 
-N = 50
-f_bleached = .46
-fmin = 0
-fmax = 1
-dmin = 0
-dmax = 20
-D, F, E = rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax)
+# N = 50
+# f_bleached = .46
+# fmin = 0
+# fmax = 1
+# dmin = 0
+# dmax = 20
+# D, F, E = rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax)

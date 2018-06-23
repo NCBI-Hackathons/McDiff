@@ -1,3 +1,18 @@
+def proposal(x, sigma, xmin, xmax):
+    x_new = x + np.random.normal(0, sigma)
+    breakage = False
+    cnt = 0
+    while (x_new > xmax) | (x_new < xmin):
+        x_new = x + np.random.normal(0, sigma)
+        cnt += 1
+        if cnt > 100:
+            breakage = True
+            break
+    if breakage == True:
+        return x, breakage
+    else:
+        return x_new, breakage
+
 def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, dmin, dmax):
     s2 = 2*T**2. #temperature
     all_params = np.zeros((2, N+1)) #store parameters
