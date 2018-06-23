@@ -51,8 +51,10 @@ From parpsimulator.m:
 def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, temp, offset, mcmc_steps):
     #exp_time is the sim_len but dont want the user to have to do the calcualations
     #bound_d is the upper bound for the for you think d could possibly be
-    #sigmaD parameters in the mcmc 
+    #sigmaD parameters in the mcmc
     #sigmaf parameters in the mcmc
+    #recomend mcm_steps = 200
+
     exec(open("sims.py").read())
 
     #parse all data files then create the roi and the nucleus
@@ -79,8 +81,15 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, t
     stuck_norm = stuck_in_roi / roi_pre
     stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
 
+    fig, ax = plt.subplots(1)
+    ax.plot(stuck_time, stuck_norm, ".", label = "Simulation")
+    ax.plot(data[0,:], data_norm, ".", label = "Data")
+    ax.legend()
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Fraction of Protiens Bound/Baseline")
 
-	return fit_plot, D_final, F_final, error
+
+	return fit_plot_name, fit_data_name, D_final, F_final, error
 
 
 
