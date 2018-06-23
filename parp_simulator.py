@@ -56,6 +56,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     #default bound_d = 20  the upper bound for the for you think d could possibly be
     #default offset = 10.5
     #default mcmc_temp = 1 when to calc likelyhood ratio, devide be estmate of noise ***NOT TEMPURATURE OF EXPERIMENT
+    #default percent_bleached = .46 that is when grean(gfp) is used 
 
     exec(open("sims.py").read())
 
@@ -73,6 +74,8 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     ##MCMC: mcmc_steps = 200 suggestion
 
     OP, E, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(4, .18, .5, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bounds_d) #.18 is timestep
+    #bool_flag_1 and bool_flag_2 and interate ends are for debugging, if either is true then the simulation has gone wrong
+
 
     lo_mejor = Error.argmin() #index of parameter optimal
     los_mejores = AP[:, lo_mejor] #best parameters
@@ -84,14 +87,32 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
 
     fig, ax = plt.subplots(1)
-    ax.plot(stuck_time, stuck_norm, ".", label = "Simulation")
-    ax.plot(data[0,:], data_norm, ".", label = "Data")
-    ax.legend()
-    ax.set_xlabel("Time (s)")
-    ax.set_ylabel("Fraction of Protiens Bound/Baseline")
+    ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
+    ax[0].plot(data[0,:], data_norm, ".", label = "Data")
+    ax[0].legend()
+    ax[0].set_xlabel("Time (s)")
+    ax[0].set_ylabel("Fraction of Protiens Bound/Baseline")
+    ax[1].hist(AP[0,:],20)
+    ax[2].hist(AP[1,:],20)
+    ax[3].plot(Error)
+    #figure to return
+    plt.savefig(fit_plot_name)
+    #CSV to return to the user, as in simulated data results
+    newfile = open("MCMC_results.txt", 'w')
+    for i in range(len(E)):
+        text = "{0} {1} {2}\n".format(E[i], AP[0,i], AP[1,i])
+        newfile.write(fit_data_name)
 
 
-	return fit_plot_name, fit_data_name, D_final, F_final, error
+    N = 50
+    f_bleached = .46 #user input about the color used in experiment
+    fmin = 0
+    fmax = 1
+    dmin = 0
+    D, F, ret_error = rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, bound_d)
+
+
+	return fit_plot_name, fit_data_name, D_final, F_final, ret_error
 
 
 
