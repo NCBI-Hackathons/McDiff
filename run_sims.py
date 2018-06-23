@@ -1,5 +1,5 @@
 #actaully do some simulations
-exec(open("sims.py").read())
+exec(open('sims.py').read())
 
 f = "./test_files/1.31.18_GFPP1_Hela_1min_002NuclMask.txt"
 mask = parse_mask(f)
@@ -40,6 +40,14 @@ stuck, roi_pre = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, sim_len
 
 stuck_norm = stuck / roi_pre
 stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
+
+fig, ax = plt.subplots(4)
+ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
+ax[0].plot(data[0,:], data_norm, ".", label = "Data")
+ax[0].legend()
+ax[0].set_xlabel("Time (s)")
+ax[0].set_ylabel("Fraction of Proteins Bound/Baseline")
+plt.show()
 
 fig, ax = plt.subplots(4)
 ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
