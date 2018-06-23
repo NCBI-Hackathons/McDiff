@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for
 from app import app
 from app.forms import FaddForm
+import parp_simulator
 
 @app.route('/')
 def index():
