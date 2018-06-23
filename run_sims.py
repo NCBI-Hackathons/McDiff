@@ -36,7 +36,7 @@ OP, E, AP, b1, b2, I = MCMC(20, .1, .5, nuc, roi, N, 1, sigmaD, sigmaF, 0, 1, 0,
 lo_mejor = E.argmin()
 los_mejores = AP[:, lo_mejor]
 
-x, y, stuck, roi_pre = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, sim_len)
+stuck, roi_pre = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, sim_len)
 
 stuck_norm = stuck / roi_pre
 stuck_time = np.arange(sim_len+1) * 0.1

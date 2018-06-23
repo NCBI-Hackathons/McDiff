@@ -102,7 +102,7 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
         x, y, N_stuck = update_positions(x, y, dx, 0.001, nuc, roi)
         stuck += N_stuck
         all_stuck[i] = stuck
-    return x, y, all_stuck, N0_roi#, x_stuck, y_stuck
+    return all_stuck, N0_roi#, x_stuck, y_stuck
 
 def compute_error(data, data_norm, stuck_time, stuck_norm):
     times = np.zeros(len(data[0,:]))
