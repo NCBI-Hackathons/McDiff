@@ -69,9 +69,9 @@ def rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, x0, y0):
     F = np.random.uniform(fmin, fmax, N)
     E = np.zeros(N)
     for i in range(N):
-        stuck_norm = simulate(D[i], F[i], f_bleached, nuc, roi, sim_len, x0, y0)
+        stuck_norm = sims.simulate(D[i], F[i], f_bleached, nuc, roi, sim_len, x0, y0)
         stuck_time = np.arange(sim_len+1) * 0.18
-        error = compute_error(data, data_norm, stuck_time, stuck_norm)
+        error = sims.compute_error(data, data_norm, stuck_time, stuck_norm)
         E[i] = np.sum(error)
     return D, F, E
 
