@@ -66,6 +66,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     #mcmc_steps = 200 suggestion -int
 
     #parse all data files then create the roi and the nucleus
+
     mask = sims.parse_mask(mask_file)
     roi_cords = sims.parse_roi(roi_file)
     roi = sims.Polygon([(roi_cords[1], roi_cords[0]), (roi_cords[1], roi_cords[0]+roi_cords[2]), (roi_cords[1]+roi_cords[3], roi_cords[0]+roi_cords[2]), (roi_cords[1]+roi_cords[3], roi_cords[0])])
@@ -74,66 +75,65 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     data_pre, data = sims.parse_data(data_file, offset) # offset origianlly 10.5
     data_norm = data[1,:] / np.mean(data_pre[1,:])
 
-    sim_len = 650 #recomended
+    sim_len = 50 #recomended
+    x0, y0 = sims.init_sim(12000, nuc)
+    s1 = .1
+    s2 = .1
+    N = 50
+    L = 3
 
-    ##MCMC: mcmc_steps = 200 suggestion
-
-    OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = optimization.MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bound_d, sim_len, data, data_pre, data_norm) #.18 is timestep
+    #OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = optimization.MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bound_d, sim_len, data, data_pre, data_norm, x0, y0) #.18 is timestep
     #bool_flag_1 and bool_flag_2 and interate ends are for debugging, if either is true then the simulation has gone wrong
 
-    #N = 50
-    #L = 10
-    #s1 = .9
-    #s2 = .9
-    #fmin = 0
-    #fmax = 1
-    #dmin = 0
-    #dmax = 20
-    #results = optimization.CF(percent_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, s1, s2, N, L)
+    results = optimization.CF(percent_bleached, nuc, roi, 0, 1, 0, bound_d, s1, s2, N, L, x0, y0, sim_len, data, data_norm)
 
-    lo_mejor = Error.argmin() #index of parameter optimal
-    los_mejores = AP[:, lo_mejor] #best parameters
+    x = results[2,:].argmin()
+    results[2,x]
+
+    #lo_mejor = Error.argmin() #index of parameter optimal
+    #los_mejores = AP[:, lo_mejor] #best parameters
     exp_time = int(exp_time/.18) #translate time to steps
 
-    stuck_in_roi, roi_pre = sims.simulate(los_mejores[0], los_mejores[1], percent_bleached, nuc, roi, sim_len)
-
-    stuck_norm = stuck_in_roi / roi_pre
+    stuck_norm = sims.simulate(results[0,x], results[1,x], 0.5, nuc, roi, sim_len, x0, y0)
     stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
+    error = sims.compute_error(data, data_norm, stuck_time, stuck_norm)
 
-    fig, ax = plt.subplots(4)
-    ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
-    ax[0].plot(data[0,:], data_norm, ".", label = "Data")
-    ax[0].legend()
-    ax[0].set_xlabel("Time (s)")
-    ax[0].set_ylabel("Fraction of Proteins Bound/Baseline")
-    ax[1].hist(AP[0,:],20)
-    ax[2].hist(AP[1,:],20)
-    ax[3].plot(Error)
+    fig, ax = plt.subplots(2)
+    ax[0].scatter(results[0,:], results[1,:], 10., results[2,:], ".")
+    ax[1].plot(stuck_time, stuck_norm, ".", label = "Simulation")
+    ax[1].plot(data[0,:], data_norm, ".", label = "Data")
+    ax[1].legend()
+    ax[1].set_xlabel("Time (s)")
+    ax[1].set_ylabel("Fraction of Proteins Bound/Baseline")
     #figure to return
-    plt.savefig(fit_plot_name)
+    #plt.savefig(file_name+"fig")
+    os.path.join(savepath+'/graph', file_name+"fig")
     #CSV to return to the user, as in simulated data results saved in results
     save_path = 'C:/GitHub/app/static/'
     newfile = open(file_name+"MCMC_results.csv", 'w')
-    for i in range(len(E)):
-        text = "{0} {1} {2}\n".format(E[i], AP[0,i], AP[1,i])
-        newfile.write(fit_data_name)
+    for i in range(len(error)):
+        text = "{0} {1} {2}\n".format(error[i], results[0,i], results[1,i])
+        newfile.write(file_name+"_MCMC_results.csv")
     #trying here to attach the data_file name onto return results name
     os.path.join(save_path+'/results', file_name+"_MCMC_results.csv")
     #print(data_file+"_MCMC_results.csv")
+
+
     resid_plot_name = file_name+'_resid_plot'
-    fig, ax = plt.subplots(1)
-    interpf = interp1d(stuck_time, stuck_norm)
-    predict = interpf(data[0,:])
-    plt.plot(data[0,:], predict - data_norm, '.')
-    plt.plot(np.linspace(0, max(data[0,:]), len(data[0,:])), np.zeros(len(data[0,:])),'-')
-    plt.savefig(resid_plot_name)
 
-    os.path.join(savepath+'/graph', resid_plot_name)
+    #fig, ax = plt.subplots(1)
+    #plt.plot(data[0,:], predict - data_norm, '.')
+    #plt.plot(np.linspace(0, max(data[0,:]), len(data[0,:])), np.zeros(len(data[0,:])),'-')
+    #plt.savefig(resid_plot_name)
 
-    fmin = 0
-    fmax = 1
-    dmin = 0
-    D_final, F_final, ret_error = sims.rand_sam(percent_bleached, nuc, roi, mcmc_steps, fmin, fmax, dmin, bound_d)
+    #os.path.join(savepath+'/graph', resid_plot_name)
+
+    #D_final, F_final, ret_error = sims.rand_sam(percent_bleached, nuc, roi, mcmc_steps, fmin, fmax, dmin, bound_d)
+
+    #results[0,0:N] = D
+    #results[1,0:N] = F
+    #results[2,0:N] = E
+
 
     return fit_plot_name, resid_plot_name, fit_data_name, D_final, F_final, ret_error
 
@@ -151,9 +151,10 @@ def main(args):
     offset = 10.5
     mcmc_steps = 50
     percent_bleached = .56
+    file_name = "FILE"
 
     #data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps = input('Please input in this order: \n data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps' )
-    wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps)
+    wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps, file_name)
     return 0
 
 if __name__ == '__main__':
