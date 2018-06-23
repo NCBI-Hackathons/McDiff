@@ -32,7 +32,7 @@ np.random.seed(1200)
 # sigmaD = 2.
 # sigmaF = .05
 # N = 200
-# OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(20, .1, .5, nuc, roi, N, 1, sigmaD, sigmaF, 0, 1, 0, 20)
+# OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(20, .1, .5, nuc, roi, N, 1, sigmaD, sigmaF, 0, 1, 0, 20,sim_len, data, data_pre, data_norm))
 #
 # lo_mejor = Error.argmin() #index of parameter optimal
 # los_mejores = AP[:, lo_mejor] #best parameters

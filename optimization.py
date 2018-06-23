@@ -1,3 +1,7 @@
+import numpy as np
+import sims
+import matplotlib.pyplot as plt
+
 def proposal(x, sigma, xmin, xmax):
     x_new = x + np.random.normal(0, sigma)
     breakage = False
@@ -13,16 +17,16 @@ def proposal(x, sigma, xmin, xmax):
     else:
         return x_new, breakage
 
-def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, dmin, dmax):
+def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, dmin, dmax, sim_len, data, data_pre, data_norm):
     s2 = 2*T**2. #temperature
     all_params = np.zeros((2, N+1)) #store parameters
     all_params[0,0] = D0
     all_params[1,0] = f_mobile0
     errores = np.zeros(N+1) #store error
-    stuck, roi_pre = simulate(D0, f_mobile0, 0.5, nuc, roi, sim_len) #do a simulation
+    stuck, roi_pre = sims.simulate(D0, f_mobile0, 0.5, nuc, roi, sim_len) #do a simulation
     stuck_norm = stuck / roi_pre
     stuck_time = np.arange(sim_len+1) * 0.1
-    error = compute_error(data, data_norm, stuck_time, stuck_norm)
+    error = sims.compute_error(data, data_norm, stuck_time, stuck_norm)
     chi2 = np.sum(error)
     errores[0] = chi2
     old_params = [D0, f_mobile0]
@@ -33,10 +37,10 @@ def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, 
         if (b1 == True) | (b2 == True):
             return old_params, errores, all_params, b1, b2, i
         else:
-            stuck, roi_pre = simulate(new_params[0], new_params[1], 0.5, nuc, roi, sim_len)
+            stuck, roi_pre = sims.simulate(new_params[0], new_params[1], 0.5, nuc, roi, sim_len)
             stuck_norm = stuck / roi_pre
             stuck_time = np.arange(sim_len+1) * 0.1
-            error = compute_error(data, data_norm, stuck_time, stuck_norm)
+            error = sims.compute_error(data, data_norm, stuck_time, stuck_norm)
             chi2_new = np.sum(error)
             if chi2_new  < chi2:
                 old_params = new_params

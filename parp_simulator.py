@@ -49,7 +49,10 @@ From parpsimulator.m:
 """
 import os.path
 import numpy as np
-import sims, optimization  #exec(open('sims.py').read())
+import sims
+import optimization  #exec(open('sims.py').read())
+import matplotlib.pyplot as plt
+
 
 def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps):
     #exp_time is the sim_len but dont want the user to have to do the calcualations
@@ -75,7 +78,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
 
     ##MCMC: mcmc_steps = 200 suggestion
 
-    OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = optimization.MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bound_d) #.18 is timestep
+    OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = optimization.MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bound_d, sim_len, data, data_pre, data_norm) #.18 is timestep
     #bool_flag_1 and bool_flag_2 and interate ends are for debugging, if either is true then the simulation has gone wrong
 
     #N = 50
