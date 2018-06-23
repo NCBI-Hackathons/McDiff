@@ -30,6 +30,10 @@ Before the implementation of this program, biologists would have to run either a
   
 # Output
 You will get a .png of the best fit simulation over your experimental data, the D and F coeficients and the r-squared error value for the simulation that was best.
+
+![we had something good...not anymore](![init_image](https://user-images.githubusercontent.com/30201026/41812786-d9e3bfd6-76e6-11e8-8b31-050b379c57bf.png)
+)
+
 ****Get Example output
 
 # Assumption
@@ -61,6 +65,7 @@ Once we had a simulation of particles moving in the nucleus, we started work on 
 
 Then we worked on importing data from the experiments, and fitting simulated curves to the experimental curves. From there we could get an r-squared value and see which simulation gave us the best fitted curve with adjusted D and F values. This is done by running each simulation with different D’s and F’s and finding the best simulation with the most fit curve. 
 
+
 **Output:**  
 
 The user is then given a graph in .png form of the best fit graph, along with the D,F, and r-squared values for reporting.
@@ -85,6 +90,7 @@ That's it! You're in the right folder and should be ready to run.
 System requirements: python 3.6.5  
   Libraries: shapely, matplotlib, descartes, numpy, scipy, random
 
+You can use `pip install` to install the required python libraries
 
 # Testing
 
@@ -97,11 +103,4 @@ We tested McDiff with the sample files found in the main directory. These files 
  
 # License
 This project is licensed under the MIT License - see the LICENSE file for details
-
-### Website
-
-  1. `$git clone https://github.com/NCBI-Hackathons/<this software>.git`
-  2. `$cd Website`
-  3. `$docker build --rm -t <this software>/website .`
-  4. `$docker run -t -i <this software>/website`
   
