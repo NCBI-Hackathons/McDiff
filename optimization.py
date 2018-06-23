@@ -79,16 +79,16 @@ def course_fine(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, r1, r2, N1, N2)
     D2, F2, E2 = rand_sam(f_bleached, nuc, roi, N2, F[x] - r1, F[x] + r1, D[x] - r2, D[x] + r2)
     return D,F,E, D2, F2, E2
 
-def CF(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, s1, s2, N, L):
+def CF(f_bleached, nuc, roi, fmin, fmax, dmin, dmax, s1, s2, N, L):
     Params = np.zeros((3, N*(L+1)))
-    D,F,E = rand_sam(f_bleached, nuc, roi, N1, fmin, fmax, dmin, dmax)
-    Params[0,1:N] = D
-    Params[1,1:N] = F
-    Params[2,1:N] = E
+    D,F,E = rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax)
+    Params[0,0:N] = D
+    Params[1,0:N] = F
+    Params[2,0:N] = E
     x = E.argmin()
     for i in range(L):
-        D2, F2, E2 = rand_sam(f_bleached, nuc, roi, N2, F[x] - (F[x] - fmin)*s1, F[x] + (F[x] + fmax)*s1, D[x] - (D[x] - dmin)*s2, D[x] + (D[x] + dmax)*s2)
-        Params[0, (N*(L+1)):(N*(L+1)) + N] = D2
-        Params[1, (N*(L+1)):(N*(L+1)) + N] = F2
-        Params[2, (N*(L+1)):(N*(L+1)) + N] = E2
+        D2, F2, E2 = rand_sam(f_bleached, nuc, roi, N, F[x] - (F[x] - fmin)*s1, F[x] + (F[x] + fmax)*s1, D[x] - (D[x] - dmin)*s2, D[x] + (D[x] + dmax)*s2)
+        Params[0, (N*(i+1)):(N*(i+1)) + N] = D2
+        Params[1, (N*(i+1)):(N*(i+1)) + N] = F2
+        Params[2, (N*(i+1)):(N*(i+1)) + N] = E2
     return Params
