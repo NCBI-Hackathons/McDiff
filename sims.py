@@ -84,26 +84,32 @@ def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
     return x_new[out_roi], y_new[out_roi], N_stuck
 
 
-def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
+def init_sim(N, nuc):
+    x, y = generate_random_points(N, nuc) #positions of all points
+    return x, y
+
+def simulate(D, f_mobile, f_bleached, nuc, roi, runtime, x0, y0):
     h = 0.10 #ms 0.19 or 0.16 in other code
     microns_2_pixels = .08677
     N = 12000
     dx = D_2_x(D, h) / microns_2_pixels # dx is in pixels
-    x, y = generate_random_points(12000, nuc) #positions of all points
-    in_roi = shapely.vectorized.contains(roi, x, y) #return a boolean mask
+    in_roi = shapely.vectorized.contains(roi, x0, y0) #return a boolean mask
     out_roi = in_roi == False
     N0_roi = np.sum(in_roi)
     stuck = int(N0_roi * (1 - f_bleached))
     all_stuck = np.zeros(runtime+1)
     all_stuck[0] = stuck
     N_sim = int((N - N0_roi) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
-    x = x[out_roi][:N_sim]
-    y = y[out_roi][:N_sim]
+    x = x0[out_roi][:N_sim]
+    y = y0[out_roi][:N_sim]
+    # expected_N0 = (nuc.intersection(roi).area / nuc.area)
     for i in range(1,runtime+1):
         x, y, N_stuck = update_positions(x, y, dx, 0.001, nuc, roi)
         stuck += N_stuck
         all_stuck[i] = stuck
-    return all_stuck, N0_roi #, x_stuck, y_stuck
+    all_stuck = all_stuck / (N * (nuc.intersection(roi).area / nuc.area))
+    return all_stuck #, x_stuck, y_stuck
+
 
 def compute_error(data, data_norm, stuck_time, stuck_norm):
     times = np.zeros(len(data[0,:]))
