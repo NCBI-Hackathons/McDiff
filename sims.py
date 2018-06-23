@@ -79,7 +79,8 @@ def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
     in_roi = shapely.vectorized.contains(roi, x_new, y_new)
     out_roi = in_roi == False
     N_stuck = np.sum(in_roi)
-    return x_new[out_roi], y_new[out_roi], x_new[in_roi], y_new[in_roi]
+    # return x_new[out_roi], y_new[out_roi], x_new[in_roi], y_new[in_roi]
+    return x_new[out_roi], y_new[out_roi], N_stuck
 
 
 def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
@@ -91,34 +92,17 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
     in_roi = shapely.vectorized.contains(roi, x, y) #return a boolean mask
     out_roi = in_roi == False
     N0_roi = np.sum(in_roi)
-    print(N0_roi)
     stuck = int(N0_roi * (1 - f_bleached))
-    print(stuck)
-    # print(stuck)
     all_stuck = np.zeros(runtime+1)
     all_stuck[0] = stuck
     N_sim = int((N - N0_roi) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
-    # print(N_sim)
-    # print(points.shape)
-    # points = points[:,out_roi][:,0:N_sim]
-    x_stuck = []
-    y_stuck = []
-    x_stuck.extend(x[in_roi])
-    y_stuck.extend(y[in_roi])
     x = x[out_roi][:N_sim]
     y = y[out_roi][:N_sim]
-    # x = points[0,:]
-    # y = points[1,:]
-    # print(len(x))
     for i in range(1,runtime+1):
-        x, y, xs, ys = update_positions(x, y, dx, 0.001, nuc, roi)
-        stuck += len(xs)
+        x, y, N_stuck = update_positions(x, y, dx, 0.001, nuc, roi)
+        stuck += N_stuck
         all_stuck[i] = stuck
-        x_stuck.extend(xs)
-        y_stuck.extend(ys)
-        # print(i)
-        #print(len(x))
-    return x, y, all_stuck, N0_roi, x_stuck, y_stuck
+    return x, y, all_stuck, N0_roi#, x_stuck, y_stuck
 
 def compute_error(data, data_norm, stuck_time, stuck_norm):
     times = np.zeros(len(data[0,:]))
@@ -128,52 +112,58 @@ def compute_error(data, data_norm, stuck_time, stuck_norm):
         dx = (np.abs(stuck_time - data[0,i])).argmin()
         times[i] = stuck_time[dx]
         y_[i] = stuck_norm[dx]
-        #error += (stuck_norm[dx] - data[1,i])**2.
         error[i] = (stuck_norm[dx] - data_norm[i])**2.
-
-    # error /= len(times)
     return error #np.sqrt(error)
 
 
-def MCMC(D0, f_mobile0, f_bleached, nuc, roi, runtime, N, sigma):
-    s2 = 2*sigma**2.
-    all_params = np.zeros((2, N+1))
+def proposal(x, sigma, xmin, xmax):
+    x_new = x + np.random.normal(0, sigma)
+    breakage = False
+    cnt = 0
+    while (x_new > xmax) | (x_new < xmin):
+        x_new = x + np.random.normal(0, sigma)
+        cnt += 1
+        if cnt > 100:
+            breakage = True
+            break
+    if breakage == True:
+        return x, breakage
+    else:
+        return x_new, breakage
+
+
+def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, dmin, dmax):
+    s2 = 2*T**2. #temperature
+    all_params = np.zeros((2, N+1)) #store parameters
     all_params[0,0] = D0
     all_params[1,0] = f_mobile0
-    errores = np.zeros(N+1)
-    x, y, stuck, roi_pre, x_stuck, y_stuck = simulate(D0, f_mobile0, 0.5, nuc, roi, sim_len)
+    errores = np.zeros(N+1) #store error
+    x, y, stuck, roi_pre = simulate(D0, f_mobile0, 0.5, nuc, roi, sim_len) #do a simulation
     stuck_norm = stuck / roi_pre
     stuck_time = np.arange(sim_len+1) * 0.1
     error = compute_error(data, data_norm, stuck_time, stuck_norm)
     chi2 = np.sum(error)
     errores[0] = chi2
     old_params = [D0, f_mobile0]
-    for i in range(N):
-        new_params[0] = old_params[0] + np.random.normal(0, 1) #sample from the proposal distribution
-        new_params[1] = old_params[1] + np.random.normal(0, 0.1)
-        cnt = 0
-        breakage = False
-        while (new_params[1] > 1) | (new_params[1] < 0):
-            new_params[1] = old_params[1] + np.random.normal(0, 0.1)
-            cnt += 1
-            if cnt > 100:
-                breakage = True
-                break
-        if breakage == True:
-            return old_params, errores, all_params
+    new_params = [0, 0]
+    for i in range(1, N+1):
+        new_params[0], b1 = proposal(old_params[0], sigma1, dmin, dmax)
+        new_params[1], b2 = proposal(old_params[1], sigma1, fmin, fmax)
+        if (b1 == True) | (b2 == True):
+            return old_params, errores, all_params, b1, b2, i
         else:
-            # all_params[0,i] = new_params[0]
-            # all_params[1,i] = new_params[1]
-            x, y, stuck, roi_pre, x_stuck, y_stuck = simulate(D0, f_mobile0, 0.5, nuc, roi, sim_len)
+            x, y, stuck, roi_pre = simulate(new_params[0], new_params[1], 0.5, nuc, roi, sim_len)
             stuck_norm = stuck / roi_pre
             stuck_time = np.arange(sim_len+1) * 0.1
             error = compute_error(data, data_norm, stuck_time, stuck_norm)
             chi2_new = np.sum(error)
-            if chi2_new  < chi:
+            if chi2_new  < chi2:
                 old_params = new_params
                 chi2 = chi2_new
                 all_params[0,i] = new_params[0]
                 all_params[1,i] = new_params[1]
+                errores[i] = chi2
+                print("Updated Parameters")
             else:
                 coin = np.random.uniform()
                 r = np.exp(chi2 - chi2_new)/s2 #likelihood function
@@ -182,7 +172,17 @@ def MCMC(D0, f_mobile0, f_bleached, nuc, roi, runtime, N, sigma):
                     chi2 = chi2_new
                     all_params[0,i] = new_params[0]
                     all_params[1,i] = new_params[1]
+                    errores[i] = chi2
+                    print("Updated Parameters")
                 else:
                     all_params[0,i] = old_params[0]
                     all_params[1,i] = old_params[1]
-    return old_params, errores, all_params
+                    errores[i] = chi2
+                    print("Keeping Old Parameters")
+    return old_params, errores, all_params, b1, b2, i
+
+
+#need to figure out how to calcualte f and thus restrict parameter space based on largest value of data, possibly normalized differently
+#uniform random grid is ~ D = np.random.uniform(0, 20, N)
+#f ~ np.random.uniform(min, 1, N)
+# def random_sample()

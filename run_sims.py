@@ -26,76 +26,41 @@ data_norm = data[1,:] / np.mean(data_pre[1,:])
 sim_len = 650
 np.random.seed(1200)
 
-x, y, stuck, roi_pre, x_stuck, y_stuck = simulate(6.69, 0.43 , 0.5, nuc, roi, sim_len)
+#########################MCMC
+
+sigmaD = 2.
+sigmaF = .05
+N = 200
+OP, E, AP, b1, b2, I = MCMC(20, .1, .5, nuc, roi, N, 1, sigmaD, sigmaF, 0, 1, 0, 20)
+
+lo_mejor = E.argmin()
+los_mejores = AP[:, lo_mejor]
+
+x, y, stuck, roi_pre = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, sim_len)
 
 stuck_norm = stuck / roi_pre
 stuck_time = np.arange(sim_len+1) * 0.1
 
-# fig, ax = plt.subplots(1)
-# ax.plot(stuck_time, stuck_norm, ".", label = "Simulation")
-# ax.plot(data[0,:], data_norm, ".", label = "Data")
-# ax.legend()
-# ax.set_xlabel("Time (s)")
-# ax.set_ylabel("Fraction of Protiens Bound/Baseline")
-# plt.show()
+fig, ax = plt.subplots(1)
+ax.plot(stuck_time, stuck_norm, ".", label = "Simulation")
+ax.plot(data[0,:], data_norm, ".", label = "Data")
+ax.legend()
+ax.set_xlabel("Time (s)")
+ax.set_ylabel("Fraction of Protiens Bound/Baseline")
+plt.show()
 
-error = compute_error(data, data_norm, stuck_time, stuck_norm)
-mse = np.sum(error)/len(error)
-rmse = np.sqrt(mse)
+    # newfile = open("MCMC_results.txt", 'w')
+    # for i in range(len(E)):
+    #     text = "{0} {1} {2}\n".format(E[i], AP[0,i], AP[1,i])
+    #     newfile.write(text)
+    #
+    #
 
 # fig, ax = plt.subplots(1)
 # ax.plot(mask[0,:], mask[1,:], ".")
 # ring = PolygonPatch(roi)
 # ax.add_patch(ring)
+
 # plt.plot(x, y, "r.", ms = 1.)
 # plt.plot(x_stuck, y_stuck, "r.", ms = 1.)
 # plt.show()
-
-#testing pieces of the simulation
-# f_mobile = .5
-# dt = 0.1 #ms 0.19 or 0.16 in other code
-# microns_2_pixels = .08677
-# N = 12000
-# # x = D_2_x(D, h)
-# points = generate_random_points(12000, a) #positions of all points
-# in_roi = check_inside(points, roi) #return a boolean mask
-# out_roi = in_roi == False
-# N_sim = int((N - np.sum(in_roi)) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
-# pointz = points[:,out_roi][:,0:N_sim]
-# pointz_new, points_stuck = update_positions(pointz, 10, 0.01, nuc, roi)
-
-
-
-#testing just the update position function
-# mu = 10
-# sigma = .01
-# l = len(pointz[0,:])
-# x = np.random.normal(mu, sigma, l)
-# y = np.random.normal(mu, sigma, l)
-# fx = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
-# fy = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
-# x *= fx
-# y *= fy
-# points_new = np.zeros((2, l))
-# points_new[0,:] += pointz[0,:] + x
-# points_new[1,:] += pointz[1,:] + y
-#
-
-
-
-
-#space to play with shapely.vectorized
-
-#
-# import shapely.vectorized
-# minx,miny,maxx,maxy = nuc.bounds
-# x = np.random.uniform(minx, maxx, 100)
-# y = np.random.uniform(miny, maxy, 100)
-# pnts = np.zeros((2, 100))
-# pnts[0,:] = x
-# pnts[1,:] = y
-# # shapely.vectorized.contains(nuc, x, y)
-# c1 = check_inside(pnts, nuc)
-# c2 = check_fast(pnts, nuc)
-# c1 == c2
-#
