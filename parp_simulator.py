@@ -48,12 +48,14 @@ From parpsimulator.m:
     %
 """
 
-def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, temp, offset, mcmc_steps):
+def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps):
     #exp_time is the sim_len but dont want the user to have to do the calcualations
-    #bound_d is the upper bound for the for you think d could possibly be
-    #sigmaD parameters in the mcmc
-    #sigmaf parameters in the mcmc
-    #recomend mcm_steps = 200
+    #default sigmaD =2    parameters in the mcmc
+    #default sigmaf =.05  parameters in the mcmc
+    #recomend/default  mcmc_steps = 200
+    #default bound_d = 20  the upper bound for the for you think d could possibly be
+    #default offset = 10.5
+    #default mcmc_temp = 1 when to calc likelyhood ratio, devide be estmate of noise ***NOT TEMPURATURE OF EXPERIMENT
 
     exec(open("sims.py").read())
 
@@ -70,7 +72,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, t
 
     ##MCMC: mcmc_steps = 200 suggestion
 
-    OP, E, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(4, .18, .5, nuc, roi, mcmc_steps, 1, sigmaD, sigmaF, 0, 1, 0, bounds_d) #.18 is timestep
+    OP, E, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(4, .18, .5, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bounds_d) #.18 is timestep
 
     lo_mejor = Error.argmin() #index of parameter optimal
     los_mejores = AP[:, lo_mejor] #best parameters
