@@ -40,7 +40,7 @@ los_mejores = AP[:, lo_mejor] #best parameters
 
 stuck_norm = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, sim_len, x0, y0)
 
-stuck_time = np.arange(sim_len+1) * 0.1 #converts array indices into seconds
+stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
 
 fig, ax = plt.subplots(4)
 ax[0].plot(stuck_time, stuck_norm, ".", label = "Simulation")
