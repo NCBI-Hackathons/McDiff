@@ -6,10 +6,12 @@ from app.forms import FaddForm
 def index():
     form = FaddForm()
     if form.validate_on_submit():
-        return(redirect('/results'+"/"+str(form.value1.data)+"/"+str(form.value2.data)+"/"+str(form.value3.data)+"/"+str(form.width.data)))
+        return(redirect('/results/'))
+
+    # If we aren't processing our form, do this
     return(render_template('index.html', title='Home', form=form))
 
-@app.route('/results/<int:val1>/<int:val2>/<int:val3>/<int:width>/')
+@app.route('/results/')
 def results(val1, val2, val3, width):
     expectation, lower, upper, ps, filename = wrapper(val1, val2, val3, width)
     expectation = round(expectation, 1)
