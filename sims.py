@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from shapely.geometry import Point, LineString
 from shapely.geometry.polygon import Polygon
+from scipy.interpolate import interp1d
 from descartes import PolygonPatch
 from shapely import geometry
 import shapely.vectorized
