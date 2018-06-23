@@ -9,6 +9,13 @@
   <form action="" method="post" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     <p>
+      {{ form.csv.label }}: <br>
+      {{ form.csv() }} 
+      {% for error in form.csv.errors %}
+      <br><span style="color: red;">[{{error}}]</span>
+      {% endfor %}
+    </p>
+    <p>
       {{ form.offset.label }}: <br>
       {{ form.offset() }}
       {% for error in form.offset.errors %}
