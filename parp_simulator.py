@@ -95,7 +95,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     los_mejores = AP[:, lo_mejor] #best parameters
     exp_time = int(exp_time/.18) #translate time to steps
 
-    stuck_in_roi, roi_pre = sims.simulate(los_mejores[0], los_mejores[1], percent_bleached, nuc, roi, exp_time)
+    stuck_in_roi, roi_pre = sims.simulate(los_mejores[0], los_mejores[1], percent_bleached, nuc, roi, sim_len)
 
     stuck_norm = stuck_in_roi / roi_pre
     stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
