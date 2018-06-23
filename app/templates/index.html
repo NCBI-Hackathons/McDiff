@@ -16,6 +16,21 @@
       {% endfor %}
     </p>
     <p>
+      {{ form.roi_file.label }}: <br>
+      {{ form.roi_file() }}
+      {% for error in form.roi_file.errors %}
+      <br><span style="color: red;">[{{error}}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.mask_file.label }}: <br>
+      {{ form.mask_file() }}
+      {% for error in form.mask_file.errors %}
+      <br><span style="color: red;">[{{error}}]</span>
+      {% endfor %}
+    </p>
+
+    <p>
       {{ form.offset.label }}: <br>
       {{ form.offset() }}
       {% for error in form.offset.errors %}
