@@ -73,7 +73,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
 
     ##MCMC: mcmc_steps = 200 suggestion
 
-    OP, E, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bounds_d) #.18 is timestep
+    OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bounds_d) #.18 is timestep
     #bool_flag_1 and bool_flag_2 and interate ends are for debugging, if either is true then the simulation has gone wrong
 
 
@@ -113,7 +113,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     fmin = 0
     fmax = 1
     dmin = 0
-    D, F, ret_error = rand_sam(percent_bleached, nuc, roi, mcmc_steps, fmin, fmax, dmin, bound_d)
+    D_final, F_final, ret_error = rand_sam(percent_bleached, nuc, roi, mcmc_steps, fmin, fmax, dmin, bound_d)
 
 
 	return fit_plot_name, resid_plot_name, fit_data_name, D_final, F_final, ret_error
