@@ -110,15 +110,10 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     plt.plot(np.linspace(0, max(data[0,:]), len(data[0,:])), np.zeros(len(data[0,:])),'-')
     plt.savefig(resid_plot_name)
 
-
-
-
-    N = 50
-    f_bleached = .46 #user input about the color used in experiment
     fmin = 0
     fmax = 1
     dmin = 0
-    D, F, ret_error = rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, bound_d)
+    D, F, ret_error = rand_sam(percent_bleached, nuc, roi, mcmc_steps, fmin, fmax, dmin, bound_d)
 
 
 	return fit_plot_name, resid_plot_name, fit_data_name, D_final, F_final, ret_error
