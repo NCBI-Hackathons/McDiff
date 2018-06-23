@@ -82,7 +82,7 @@ That's it! You should be ready to run.
 ### Configuration and dependencies
  
 System requirements: python 3.6.5  
-  Libraries: shapely, matplotlib, descartes, numpy, random
+  Libraries: shapely, matplotlib, descartes, numpy, scipy, random
 
 
 # Testing
