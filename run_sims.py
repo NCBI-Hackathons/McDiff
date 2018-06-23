@@ -54,7 +54,7 @@ plt.show()
 
 # f_bleached = .54
 # N = 50
-# L = 3
+# L = 5
 # s1 = .1
 # s2 = .1
 # fmin = 0
