@@ -49,9 +49,6 @@ Before the implementation of this program, biologists would have to run either a
 # Keywords
  Free Diffusion Constant, Nucleus, Fluorescence Accumulation after DNA Damage (FADD)  
 
-# Website 
-
-
 
 # How to use McDiff
 `$python3 run_sims.py mask_file ROI_file data_file` 
@@ -61,12 +58,9 @@ Before the implementation of this program, biologists would have to run either a
 # Output
 You will get a .png of the best fit simulation over your experimental data, the D and F coeficients and the r-squared error value for the simulation that was best.
 
-![init_image](https://user-images.githubusercontent.com/30201026/41813001-517b8bb6-76ea-11e8-859e-ebc81040bf80.png)
+The results of running the simulation on the provided test files is below.
 
-
-****Get Example output
-
-# Assumption
+![This_is_good](https://user-images.githubusercontent.com/30201026/41813769-3b766d9a-76f9-11e8-8bb9-cf1e66744f6f.png)
 
 # Software Workflow Diagram
 
