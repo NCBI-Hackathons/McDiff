@@ -84,7 +84,7 @@ def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
 
 
 def simulate(D, f_mobile, f_bleached, nuc, roi, runtime):
-    h = 0.1 #ms 0.19 or 0.16 in other code
+    h = 0.18 #ms 0.19 or 0.16 in other code
     microns_2_pixels = .08677
     N = 12000
     dx = D_2_x(D, h) / microns_2_pixels # dx is in pixels
