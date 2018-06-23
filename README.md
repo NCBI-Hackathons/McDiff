@@ -2,6 +2,35 @@
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)
 ![Packagist](https://img.shields.io/badge/Hackathon-in--progress-orange.svg)
 
+### Installing McDiff from Github
+
+### Step 1:
+```
+# Clone the repo and move into it
+$ git clone https://github.com/NCBI-Hackathons/McDiff.git
+$ cd McDiff
+```
+
+That's it! You're in the right folder and should be ready to run.
+
+### Configuration and dependencies
+ 
+System requirements: python 3.6.5  
+  Libraries: shapely, matplotlib, descartes, numpy, scipy, random
+
+You can use `pip install` to install the required python libraries
+
+# Testing
+
+We tested McDiff with the sample files found in the main directory. These files are:  
+1. [Test Data](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002.csv "Test Data")    
+
+2. [Outline of Nucleus](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002NuclMask.txt "Outline of Nucleus")    
+
+3. [Region of Interest](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt "Region of Intrest")     
+ 
+
+
 # McDiff
 A Monte Carlo Approach for Estimating Diffusion Coefficients   
 This would be used by a cell biologist to get the coeficeint of free diffusion, and fraction of protein that accumulates at the region of interest within a cell.  
@@ -74,33 +103,6 @@ The user is then given a graph in .png form of the best fit graph, along with th
 
 McDiff should be installed directly from Github.
 
-### Installing McDiff from Github
-
-### Step 1:
-```
-# Clone the repo and move into it
-$ git clone https://github.com/NCBI-Hackathons/McDiff.git
-$ cd McDiff
-```
-
-That's it! You're in the right folder and should be ready to run.
-
-### Configuration and dependencies
- 
-System requirements: python 3.6.5  
-  Libraries: shapely, matplotlib, descartes, numpy, scipy, random
-
-You can use `pip install` to install the required python libraries
-
-# Testing
-
-We tested McDiff with the sample files found in the main directory. These files are:  
-1. [Test Data](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002.csv "Test Data")    
-
-2. [Outline of Nucleus](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002NuclMask.txt "Outline of Nucleus")    
-
-3. [Region of Interest](https://github.com/NCBI-Hackathons/McDiff/blob/master/test_files/1.31.18_GFPP1_Hela_1min_002ROI.txt "Region of Intrest")     
- 
 # License
 This project is licensed under the MIT License - see the LICENSE file for details
   
