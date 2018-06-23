@@ -56,7 +56,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     #default bound_d = 20  the upper bound for the for you think d could possibly be
     #default offset = 10.5
     #default mcmc_temp = 1 when to calc likelyhood ratio, devide be estmate of noise ***NOT TEMPURATURE OF EXPERIMENT
-    #default percent_bleached = .46 that is when grean(gfp) is used 
+    #default percent_bleached = .54 that is when grean(gfp) is used, that is ammount that becomes bleached
 
     exec(open("sims.py").read())
 
@@ -73,7 +73,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
 
     ##MCMC: mcmc_steps = 200 suggestion
 
-    OP, E, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(4, .18, .5, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bounds_d) #.18 is timestep
+    OP, E, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bounds_d) #.18 is timestep
     #bool_flag_1 and bool_flag_2 and interate ends are for debugging, if either is true then the simulation has gone wrong
 
 
@@ -81,7 +81,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     los_mejores = AP[:, lo_mejor] #best parameters
     epx_time = int(exp_time/.18) #translate time to steps
 
-    stuck_in_roi, roi_pre = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, exp_time)
+    stuck_in_roi, roi_pre = simulate(los_mejores[0], los_mejores[1], percent_bleached, nuc, roi, exp_time)
 
     stuck_norm = stuck_in_roi / roi_pre
     stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
@@ -102,7 +102,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, m
     for i in range(len(E)):
         text = "{0} {1} {2}\n".format(E[i], AP[0,i], AP[1,i])
         newfile.write(fit_data_name)
-        
+
     fig, ax = plt.subplots(1)
     interpf = interp1d(stuck_time, stuck_norm)
     predict = interpf(data[0,:])
