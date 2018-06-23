@@ -64,7 +64,7 @@ def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, 
                     print("Keeping Old Parameters")
     return old_params, errores, all_params, b1, b2, i
 
-def rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, x0, y0):
+def rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, x0, y0, sim_len, data, data_norm):
     D = np.random.uniform(dmin, dmax, N)
     F = np.random.uniform(fmin, fmax, N)
     E = np.zeros(N)
@@ -75,15 +75,15 @@ def rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, x0, y0):
         E[i] = np.sum(error)
     return D, F, E
 
-def CF(f_bleached, nuc, roi, fmin, fmax, dmin, dmax, s1, s2, N, L, x0, y0):
+def CF(f_bleached, nuc, roi, fmin, fmax, dmin, dmax, s1, s2, N, L, x0, y0, sim_len, data, data_norm):
     Params = np.zeros((3, N*(L+1)))
-    D,F,E = rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, x0, y0)
+    D,F,E = rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, x0, y0, sim_len, data, data_norm)
     Params[0,0:N] = D
     Params[1,0:N] = F
     Params[2,0:N] = E
     x = E.argmin()
     for i in range(L):
-        D2, F2, E2 = rand_sam(f_bleached, nuc, roi, N, F[x] - (F[x] - fmin)*s1, F[x] + (F[x] + fmax)*s1, D[x] - (D[x] - dmin)*s2, D[x] + (D[x] + dmax)*s2, x0, y0)
+        D2, F2, E2 = rand_sam(f_bleached, nuc, roi, N, F[x] - (F[x] - fmin)*s1, F[x] + (F[x] + fmax)*s1, D[x] - (D[x] - dmin)*s2, D[x] + (D[x] + dmax)*s2, x0, y0, sim_len)
         Params[0, (N*(i+1)):(N*(i+1)) + N] = D2
         Params[1, (N*(i+1)):(N*(i+1)) + N] = F2
         Params[2, (N*(i+1)):(N*(i+1)) + N] = E2

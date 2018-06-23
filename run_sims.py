@@ -61,7 +61,7 @@ fmin = 0
 fmax = 1
 dmin = 0
 dmax = 20
-results = CF(f_bleached, nuc, roi, fmin, fmax, dmin, dmax, s1, s2, N, L, x0, y0)
+results = CF(f_bleached, nuc, roi, fmin, fmax, dmin, dmax, s1, s2, N, L, x0, y0, sim_len)
 
 x = results[2,:].argmin()
 results[2,x]
