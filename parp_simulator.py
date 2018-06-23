@@ -67,11 +67,19 @@ def wrapper(data_file, roi_file, mask_file, bounds_f, bounds_d, sim_len, sigmaD,
 
     OP, E, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(20, .1, .5, nuc, roi, mcmc_steps, 1, sigmaD, sigmaF, 0, 1, 0, 20)
 
+    lo_mejor = Error.argmin() #index of parameter optimal
+    los_mejores = AP[:, lo_mejor] #best parameters
+
+    stuck_in_roi, roi_pre = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, sim_len)
+
+
 	return fit_plot, D_final, F_final, error
 
 
 
 def main(args):
+
+    wrapper(data_file, roi_file, mask_file, bounds_f, bounds_d, sim_len, sigmaD, sigmaF temp, offset, mcmc_steps)
     return 0
 
 if __name__ == '__main__':
