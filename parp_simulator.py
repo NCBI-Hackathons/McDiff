@@ -48,8 +48,11 @@ From parpsimulator.m:
     %
 """
 
-def wrapper(data_file, roi_file, mask_file, bounds_f, bounds_d, exp_time, sigmaD, sigmaF, temp, offset, mcmc_steps):
+def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, temp, offset, mcmc_steps):
     #exp_time is the sim_len but dont want the user to have to do the calcualations
+    #bound_d is the upper bound for the for you think d could possibly be
+    #sigmaD parameters in the mcmc 
+    #sigmaf parameters in the mcmc
     exec(open("sims.py").read())
 
     #parse all data files then create the roi and the nucleus
@@ -65,12 +68,16 @@ def wrapper(data_file, roi_file, mask_file, bounds_f, bounds_d, exp_time, sigmaD
 
     ##MCMC: mcmc_steps = 200 suggestion
 
-    OP, E, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(20, .18, .5, nuc, roi, mcmc_steps, 1, sigmaD, sigmaF, 0, 1, 0, 20) #.1 is timestep
+    OP, E, AP, bool_flag_1, bool_flag_2, Iterate_ended = MCMC(4, .18, .5, nuc, roi, mcmc_steps, 1, sigmaD, sigmaF, 0, 1, 0, bounds_d) #.18 is timestep
 
     lo_mejor = Error.argmin() #index of parameter optimal
     los_mejores = AP[:, lo_mejor] #best parameters
-    epx_time=int(exp_time/.18)
+    epx_time = int(exp_time/.18) #translate time to steps
+
     stuck_in_roi, roi_pre = simulate(los_mejores[0], los_mejores[1], 0.5, nuc, roi, exp_time)
+
+    stuck_norm = stuck_in_roi / roi_pre
+    stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
 
 
 	return fit_plot, D_final, F_final, error
