@@ -19,7 +19,7 @@ class FaddForm(FlaskForm):
     bound_d = IntegerField('bound_d', validators=[DataRequired(message="This field is required and must be an int between 0 and 100"), NumberRange(min=1, max=100)], render_kw={"value": "20"})
     
     # exp_time
-    exp_time = FloatField('exp_time', validators=[DataRequired(message="This field is required and must be an int between 0 and 60"), NumberRange(min=0, max=15)])
+    exp_time = FloatField('exp_time', validators=[DataRequired(message="This field is required and must be an int between 0 and 60"), NumberRange(min=0, max=100)])
 
 
     # sigmaD
