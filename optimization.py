@@ -50,6 +50,8 @@ def MCMC(D0, f_mobile0, f_bleached, nuc, roi, N, T, sigma1, sigma2, fmin, fmax, 
             else:
                 coin = np.random.uniform()
                 r = np.exp(chi2 - chi2_new)/s2 #likelihood function
+                #chi2_new > chi2, thus exponent is negative, numerator is between 0 and 1
+                #the worse the proposed parameters are, the less likely you are to accept them
                 if coin < r:
                     old_params = new_params
                     chi2 = chi2_new
@@ -76,15 +78,33 @@ def rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, x0, y0, sim_len, d
     return D, F, E
 
 def CF(f_bleached, nuc, roi, fmin, fmax, dmin, dmax, s1, s2, N, L, x0, y0, sim_len, data, data_norm):
+    #random search, pick the best point, scale the parameter bounds inwards by some factor, repeat over L layers
     Params = np.zeros((3, N*(L+1)))
     D,F,E = rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, x0, y0, sim_len, data, data_norm)
     Params[0,0:N] = D
     Params[1,0:N] = F
     Params[2,0:N] = E
     x = E.argmin()
+    bounds = np.zeros(4)
+    bounds[0] = F[x] - (F[x] - fmin)*s1
+    bounds[1] = F[x] + (fmax - F[x])*s1
+    bounds[2] = D[x] - (D[x] - dmin)*s2
+    bounds[3] = D[x] + (dmax - D[x])*s2
+    print("initial", bounds)
     for i in range(L):
-        D2, F2, E2 = rand_sam(f_bleached, nuc, roi, N, F[x] - (F[x] - fmin)*s1, F[x] + (F[x] + fmax)*s1, D[x] - (D[x] - dmin)*s2, D[x] + (D[x] + dmax)*s2, x0, y0, sim_len, data, data_norm)
+        D2, F2, E2 = rand_sam(f_bleached, nuc, roi, N, bounds[0], bounds[1], bounds[2], bounds[3], x0, y0, sim_len, data, data_norm)
         Params[0, (N*(i+1)):(N*(i+1)) + N] = D2
         Params[1, (N*(i+1)):(N*(i+1)) + N] = F2
         Params[2, (N*(i+1)):(N*(i+1)) + N] = E2
+        x = E2.argmin()
+        print(F2[x], " is my best f coordinate")
+        print(bounds[0], "is my previous lower bound")
+        print(F2[x] - bounds[0], "is the difference from previous bound")
+        print(s1*(F2[x] - bounds[0]), "is the difference from previous bound times s")
+        print(F2[x] - (F2[x] - bounds[0])*s1, "is proposed new bound")
+        bounds[0] = F2[x] - (F2[x] - bounds[0])*s1
+        bounds[1] = F2[x] + (bounds[1]- F2[x])*s1
+        bounds[2] = D2[x] - (D2[x] - bounds[2])*s2
+        bounds[3] = D2[x] + (bounds[3] - D2[x])*s2
+        print(bounds)
     return Params

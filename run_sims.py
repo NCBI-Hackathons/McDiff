@@ -53,15 +53,15 @@ x0, y0 = init_sim(12000, nuc)
 # plt.show()
 
 f_bleached = .54
-N = 50
-L = 3
-s1 = .1
-s2 = .1
+N = 25
+L = 6
+s1 = .95
+s2 = .95
 fmin = 0
 fmax = 1
 dmin = 0
 dmax = 20
-results = CF(f_bleached, nuc, roi, fmin, fmax, dmin, dmax, s1, s2, N, L, x0, y0, sim_len)
+results = CF(f_bleached, nuc, roi, fmin, fmax, dmin, dmax, s1, s2, N, L, x0, y0, sim_len, data, data_norm)
 
 x = results[2,:].argmin()
 results[2,x]
