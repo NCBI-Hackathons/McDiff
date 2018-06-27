@@ -7,9 +7,11 @@ from descartes import PolygonPatch
 from shapely import geometry
 import shapely.vectorized
 
-# exec(open("initialize_points_w.py", 'r').read())
-
 def parse_mask(x):
+    ''' Parses a file containing coordinate points for a nucleus outline.
+        Input file is a txt file with coordinate points defining the boundaries
+        as ordered pairs (i.e., each row has x coord, y coord)
+        Output is a 2-d numpy array, where row 1 has x, row 2 had y'''
     with open(x) as f:
         a = f.read()
     b = a.split('\n')
@@ -23,6 +25,8 @@ def parse_mask(x):
 
 
 def parse_roi(x):
+    '''Reads in a .txt file with points defining the region of interest
+       within the nucleus. Returns a one-D numpy array.'''
     with open(x) as f:
         a = f.read()
     b = a.split(', ')
