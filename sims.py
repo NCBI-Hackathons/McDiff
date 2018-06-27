@@ -249,3 +249,38 @@ def compute_error(data, data_norm, stuck_time, stuck_norm):
         y_[i] = stuck_norm[dx]
         error[i] = (stuck_norm[dx] - data_norm[i])**2.
     return error #np.sqrt(error)
+
+def compute_Rsq(data, data_norm, stuck_time, stuck_norm, plot_name = None):
+    '''Calculates R-squared 
+    (technically not correct Rsq due to non-linearity of our curve but w/e)
+    INPUT PARAMS:
+    data - raw observed data, 2d numpy array, where first row contains time (s)
+    data_norm - normalized observed concentration (within ROI) data
+    stuck_time - array with time (s) of simulation output
+    stuck_norm - array with concentrations (normalized) in ROI from simulation
+    plot_name - name of plot (if None, do not plot results)
+    OUTPUT PARAMS:
+    R squared = 1 - (sum of sq. resid. error) / (sum of sq. total error)'''
+    
+    # interpf is an interpolation object (from scipy)
+    # used to interpolate simulated concentration in ROI for the time points
+    # in observed data
+    interpf = interp1d(stuck_time, stuck_norm)
+    # "predicted" concentrations by simulation at each time step in obs. data
+    predict = interpf(data[0,:])
+    # residuals
+    residus = predict - data_norm
+    
+    # summed square error (total variance in observed data)
+    sse = np.sum((data_norm - np.mean(data_norm))**2)
+    # summed square residuals (error in simulation)
+    ssr = np.sum((residus)**2)
+    
+    if not plot_name:
+        # plot residuals
+        plt.plot(data[0,:], residus, '.')
+        # plot zero line for comparison
+        plt.plot(np.linspace(0, max(data[0,:]), len(data[0,:])), np.zeros(len(data[0,:])),'-')
+        plt.savefig(plot_name)
+    
+    return 1 - (ssr/sse)
