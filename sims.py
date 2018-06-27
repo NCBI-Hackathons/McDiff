@@ -36,19 +36,43 @@ def parse_roi(x):
     return d
 
 
-def parse_data(data, offset):
+def parse_data(data, offset, damage_index):
+    '''Reads in a csv with data on accumulation of parp in nucleus over time.
+       This assumes that the first several rows of data (time points) are
+       before the laser damage occurs.
+       x1 is a 2D array with row 1 time points, row 2 parp concentrations, 
+       before the laser damage.
+       x2 is a 2D array with row 1 time points, row 2 parp concentrations,
+       after the laser damage.
+       One can use the mean concentration in x1 to do normalize concentrations
+       in x2.
+       The offset argument is a float, determining at what time the damage
+       occurs, and this value is subtracted from all time points in x2 such
+       that the time values here (first row) are time since laser damage.
+       data is a .csv made by Johannes -- the first five lines are preamble
+       stuff which we don't use; the ROI we are tracking is in the 12th column
+       (L in an excel spreadsheet) -- this is obviously not generalizable to
+       everyone else's data files.
+       damage_index (int) defines the length of the two output arrays --
+       the entries 1 - damage_index will end up in x1, damage_index - end
+       will end up in x2.
+       think of it as the row in the csv where the laser damage occurs.'''
+    
     with open(data, 'r') as f:
         a = f.read()
     b = a.split('\n')
+    # ignore the first 5 entries of b because it the first five lines of
+    # the csv are preamble and contain no data
     d = np.zeros((2, len(b)-5))
     for i in range(len(b)-5):
         c = b[i+4].split(',')
         d[0,i] = float(c[0])
-        d[1,i] = float(c[11])
-    x1 = d[:,:6]
-    x2 = d[:,6:]
-    x1[0,:] -= offset
-    x2[0,:] -= offset
+        d[1,i] = float(c[11]) # ROI is 12th col of the csv ( hard coded :( )
+    # separate off offset for damage time
+    d[0,:] -= offset
+    # separate pre- and post-damage data into two separate arrays
+    x1 = d[:,:damage_index]
+    x2 = d[:,damage_index:]
     return x1, x2
 
 

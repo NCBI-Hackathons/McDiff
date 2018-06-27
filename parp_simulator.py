@@ -54,13 +54,14 @@ import optimization  #exec(open('sims.py').read())
 import matplotlib.pyplot as plt
 
 
-def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps, file_name):
+def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, dam_ind, mcmc_steps, file_name):
     #exp_time is the sim_len but dont want the user to have to do the calcualations
     #default sigmaD =2    parameters in the mcmc - int
     #default sigmaf =.05  parameters in the mcmc - float
     #recomend/default  mcmc_steps = 200 - int
     #default bound_d = 20  - int the upper bound for the for you think d could possibly be
     #default offset = 10.5 - float
+    #default dam_ind = 6.0, int
     #default mcmc_temp = 1 - int  when to calc likelyhood ratio, devide be estmate of noise ***NOT TEMPURATURE OF EXPERIMENT
     #default percent_bleached = .54 that is when grean(gfp) is used, that is ammount that becomes bleached - float
     #mcmc_steps = 200 suggestion -int
@@ -71,7 +72,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     roi = sims.Polygon([(roi_cords[1], roi_cords[0]), (roi_cords[1], roi_cords[0]+roi_cords[2]), (roi_cords[1]+roi_cords[3], roi_cords[0]+roi_cords[2]), (roi_cords[1]+roi_cords[3], roi_cords[0])])
     nuc = sims.Polygon(list(zip(mask[0,:], mask[1,:])))
 
-    data_pre, data = sims.parse_data(data_file, offset) # offset origianlly 10.5
+    data_pre, data = sims.parse_data(data_file, offset, dam_ind) # offset origianlly 10.5
     data_norm = data[1,:] / np.mean(data_pre[1,:])
 
     sim_len = mcmc_steps #recomended

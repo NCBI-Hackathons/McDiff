@@ -20,7 +20,7 @@ nuc = Polygon(list(zip(mask[0,:], mask[1,:])))
 # ring = PolygonPatch(roi_points)
 # ax.add_patch(ring)
 
-data_pre, data = parse_data("./test_files/1.31.18_GFPP1_Hela_1min_002.csv", 10.5)
+data_pre, data = parse_data("./test_files/1.31.18_GFPP1_Hela_1min_002.csv", 10.5, 6)
 #check_inside(IV, a)
 data_norm = data[1,:] / np.mean(data_pre[1,:])
 
