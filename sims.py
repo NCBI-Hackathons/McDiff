@@ -96,25 +96,67 @@ def D_2_x(D, h):
     return x
 
 def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
+    ''' Function updating the positions of particles along a lattice.
+        This assumes the following:
+        - step size is distributed according to a Gaussian (mu, sigma)
+        - particles can move in x and y (or both), i.e., can move in one
+        of eight directions (left, left and up, up, right and up, ...) but
+        must move in at least one direction (direction of movement is 50/50)
+        - once particles enter the ROI, they are STUCK in the ROI and
+        no longer move
+        We took the following liberty while modeling:
+        - When particles become stuck in the ROI, we no longer store their
+        positions; we instead return the number of particles which became
+        stuck in the ROI in that time step (this means the number of
+        coordinate pairs returned may be smaller than the number passed in)
+        - When we simulate movement that moves particles outside the ROI,
+        then we do not update the particle's position. This can be thought of
+        as similar to reflecting boundary conditions.
+        INPUT PARAMS:
+        x_cord, y_cord are x, y coordinates to be updated
+        mu, sigma define a Gaussian for step size.
+        nucleus is a shapely polygon defining the nucleus
+        roi is a shapely polygon defining the ROI
+        OUTPUT PARAMS:
+        x_new[out_roi], y_new[out_roi] are update x, y coords of particles
+        which are not in the ROI
+        N_stuck is the number (integer) of particles which got stuck in
+        the ROI in this time step
+        '''
+    # Number of particles to simulate moving
     l = len(x_cord)
+    # Draws from Gaussian to define step length in x and y (independent)
     x = np.random.normal(mu, sigma, l)
     y = np.random.normal(mu, sigma, l)
+    # Draws from uniform distribution to define direction of movement
+    # (this has 50% chance of generating -1, 50% of generatin 1)
+    # note x and y directions of movement are independent of each other
     fx = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
     fy = ((np.random.uniform(0, 1, l) > 0.5)*2) - 1
+    # combine step length and direction
     x *= fx
     y *= fy
+    # create updated positions for each particle
     x_new = x_cord + x
     y_new = y_cord + y
-    #if you kicked a protein outside the nucleus, restore to initial position
-    # out_nuc = check_inside(points_new, nucleus) == False
+    # check to see which of these new updated positions is outside the nucleus
+    # (out_nuc is a boolean mask)
     out_nuc = shapely.vectorized.contains(nucleus, x_new, y_new) == False
+    # for positions which are not in the nucleus, change updated positions
+    # to be the pre-motion positions (i.e., don't change position if the
+    # new position would be outside the nucleus)
     x_new[out_nuc] = x_cord[out_nuc]
     y_new[out_nuc] = y_cord[out_nuc]
-    #now check if you have particles stuck in the middle
+    # Determine number of particles which have entered the ROI
+    # (note -- no coordinates of particles inside the ROI should have been
+    # passed into this function, so all particles in the ROI are new to the
+    # ROI in this time step)
     in_roi = shapely.vectorized.contains(roi, x_new, y_new)
-    out_roi = in_roi == False
     N_stuck = np.sum(in_roi)
-    # return x_new[out_roi], y_new[out_roi], x_new[in_roi], y_new[in_roi]
+    # Give boolean mask for particles outside the ROI
+    # (so that we can return only positions of these particles)
+    out_roi = in_roi == False
+
     return x_new[out_roi], y_new[out_roi], N_stuck
 
 
