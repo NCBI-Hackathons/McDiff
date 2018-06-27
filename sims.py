@@ -77,15 +77,21 @@ def parse_data(data, offset, damage_index):
 
 
 def generate_random_points(N, poly):
-	list_of_points = np.zeros((2, N))
-	minx,miny,maxx,maxy = poly.bounds
-	counter = 0
-	x = np.random.uniform(minx, maxx, N*3)
-	y = np.random.uniform(miny, maxy, N*3)
-	innie = shapely.vectorized.contains(poly, x, y)
-	return x[innie][:N], y[innie][:N]
+    '''Randomly (uniformly distributed) placement of N particles within the
+       borders of shapely polygon 'poly'. 
+       This generates 3N particles and returns only the first N within poly.'''   
+    list_of_points = np.zeros((2, N))
+    minx,miny,maxx,maxy = poly.bounds
+    counter = 0
+    x = np.random.uniform(minx, maxx, N*3)
+    y = np.random.uniform(miny, maxy, N*3)
+    innie = shapely.vectorized.contains(poly, x, y)
+    return x[innie][:N], y[innie][:N]
 
 def D_2_x(D, h):
+    ''' Wrapper for transforming the diffusion coefficient into delta x.
+        Here x = dx, h = dt (just like in calculus class)
+        D = (1/2) * (dx)**2 / (dt) <-> dx = sqrt(2 * D * dt)'''
     x = np.sqrt((2*D*h))
     return x
 
