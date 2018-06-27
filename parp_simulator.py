@@ -74,7 +74,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     data_pre, data = sims.parse_data(data_file, offset) # offset origianlly 10.5
     data_norm = data[1,:] / np.mean(data_pre[1,:])
 
-    sim_len = 250 #recomended
+    sim_len = mcmc_steps #recomended
     x0, y0 = sims.init_sim(12000, nuc)
     s1 = .18
     s2 = .18
@@ -103,13 +103,13 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     ax[1].set_xlabel("Time (s)")
     ax[1].set_ylabel("Fraction of Proteins Bound/Baseline")
     plt.savefig(file_name+"fig") #saves figure to directory
-    print("figure saved")
     savepath = 'C:/GitHub/McDiff/app'
-    os.path.join(savepath+'/graph', file_name+"fig")
+    os.path.join(savepath+'/graph', file_name+"_Figure")
+    print("figure saved")
+
     #CSV to return to the user, as in simulated data results saved in results
     save_path = 'C:/GitHub/app/static/'
-
-    newfile = open(file_name+"MCMC_results.csv", 'w')
+    newfile = open(file_name+"_MCMC_results.csv", 'w')
 
     for i in range(len(ret_error)):
         text = "{0} {1} {2}\n".format(ret_error[i], results[0,i], results[1,i])
@@ -125,7 +125,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     #results[0,0:N] = D
     #results[1,0:N] = F
     #results[2,0:N] = E
-    #these are all arrays 
+    #these are all arrays
     D_final = results[0,0:N]
     F_final = results[1,0:N]
     ret_error = results[2,0:N]
@@ -144,7 +144,7 @@ def main(args):
     sigmaF = .05
     mcmc_temp = 1
     offset = 10.5
-    mcmc_steps = 50
+    mcmc_steps = 250
     percent_bleached = .56
     file_name = "FILE"
 
