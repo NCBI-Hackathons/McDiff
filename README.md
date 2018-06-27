@@ -1,7 +1,8 @@
 ![Packagist](https://img.shields.io/badge/python-3.6.5-orange.svg)
 ![Packagist](https://img.shields.io/depfu/depfu/example-ruby.svg)
 ![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)
-![Packagist](https://img.shields.io/badge/Hackathon-in--progress-orange.svg)
+![Packagist](https://img.shields.io/badge/hackathon-done-lightgrey.svg)
+![Packagist](https://img.shields.io/badge/testing-wrapper-orange.svg)
 
 ### Installing McDiff from Github
 
