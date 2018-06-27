@@ -176,26 +176,67 @@ def init_sim(N, nuc):
     return x, y
 
 def simulate(D, f_mobile, f_bleached, nuc, roi, runtime, x0, y0):
-    h = 0.18 #ms 0.19 or 0.16 in other code
+    ''' Function to simulate particle movement for specified runtime.
+        This takes in already-initialized points and, then updates positions
+        the specified number of itme steps.
+        INPUT PARAMS:
+        D - diffusion coefficient in microns sq. per second (input D to
+        make a D, F parameter sweep easier)
+        f_mobile - mobile fraction, the proportion of particles in cell which
+        can move
+        f_bleached - proportion of particles in ROI which become photobleached
+        nuc - shapely polygon object defining nucleus boundaries
+        roi - shapely polygon object defining ROI boundaries
+        runtime - number of timesteps to update particle positions
+        (** I think this is currently in timesteps -- shouldn't it be in secs?)
+        x0, y0 - initial positions (should be passed in from init_sim())
+        OUTPUT PARAMS:
+        all_stuck - (array) time series with counts of particles in ROI
+        '''
+        
+    # length of each time step (in seconds)
+    # we hard-coded this in to roughly match Johannes's experiments.
+    h = 0.18
+    # conversion factor for microns to pixels
     microns_2_pixels = .08677
+    # number of particles to simulate 
+    # (hard-coded for now, maybe should later be added as argument for
+    # larger nucleus sizes)
     N = 12000
-    dx = D_2_x(D, h) / microns_2_pixels # dx is in pixels
-    in_roi = shapely.vectorized.contains(roi, x0, y0) #return a boolean mask
+    # calculating dx (in pixels) from D (in microns)
+    dx = D_2_x(D, h) / microns_2_pixels
+    # in_roi is a boolean mask for each particle, whether or not in ROI
+    in_roi = shapely.vectorized.contains(roi, x0, y0)
+    # out_roi is the compliment for in_roi (also a boolean mask)
     out_roi = in_roi == False
+    # N0_roi is the total number of particles in the ROI at time 0
     N0_roi = np.sum(in_roi)
+    # stuck is the number of particles in the ROI which did not get bleached
     stuck = int(N0_roi * (1 - f_bleached))
+    # initialize all_stuck, a numpy array which will hold the number of
+    # particles stuck in the ROI in each time step
     all_stuck = np.zeros(runtime+1)
     all_stuck[0] = stuck
-    N_sim = int((N - N0_roi) * f_mobile) #N = (N*f_mobile) - (in_roi * f_mobile)
+    # N_sim is the number of particles to simulate moving,
+    # x, y are the coordinates within the nucleus of these particles
+    # (i.e., the proportion of the particles not in the ROI which are mobile)
+    N_sim = int((N - N0_roi) * f_mobile)
     x = x0[out_roi][:N_sim]
     y = y0[out_roi][:N_sim]
-    # expected_N0 = (nuc.intersection(roi).area / nuc.area)
+    
+    # iterate particle movements over time
+    # in each time step, store the number of particles moved
     for i in range(1,runtime+1):
+        # update positions of each particle (n.b. sd of the Gaussian is fixed)
         x, y, N_stuck = update_positions(x, y, dx, 0.001, nuc, roi)
+        # N_stuck is the number of particles which got stuck in the ROI
+        # in this time step
+        # stuck is the overall number of particles stuck in the ROI
         stuck += N_stuck
+        # store number of particles stuck in ROI in this time step
         all_stuck[i] = stuck
-    all_stuck = all_stuck / (N * (nuc.intersection(roi).area / nuc.area))
-    return all_stuck #, x_stuck, y_stuck
+
+    return all_stuck
 
 
 def compute_error(data, data_norm, stuck_time, stuck_norm):
