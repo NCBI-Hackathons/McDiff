@@ -97,11 +97,11 @@ def CF(f_bleached, nuc, roi, fmin, fmax, dmin, dmax, s1, s2, N, L, x0, y0, sim_l
         Params[1, (N*(i+1)):(N*(i+1)) + N] = F2
         Params[2, (N*(i+1)):(N*(i+1)) + N] = E2
         x = E2.argmin()
-        print(F2[x], " is my best f coordinate")
-        print(bounds[0], "is my previous lower bound")
-        print(F2[x] - bounds[0], "is the difference from previous bound")
-        print(s1*(F2[x] - bounds[0]), "is the difference from previous bound times s")
-        print(F2[x] - (F2[x] - bounds[0])*s1, "is proposed new bound")
+        #print(F2[x], " is my best f coordinate")
+        #print(bounds[0], "is my previous lower bound")
+        #print(F2[x] - bounds[0], "is the difference from previous bound")
+        #print(s1*(F2[x] - bounds[0]), "is the difference from previous bound times s")
+        #print(F2[x] - (F2[x] - bounds[0])*s1, "is proposed new bound")
         bounds[0] = F2[x] - (F2[x] - bounds[0])*s1
         bounds[1] = F2[x] + (bounds[1]- F2[x])*s1
         bounds[2] = D2[x] - (D2[x] - bounds[2])*s2

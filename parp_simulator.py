@@ -65,8 +65,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     #default percent_bleached = .54 that is when grean(gfp) is used, that is ammount that becomes bleached - float
     #mcmc_steps = 200 suggestion -int
 
-    #parse all data files then create the roi and the nucleus
-
+    #parse all data files then create the roi and the nucleus:
     mask = sims.parse_mask(mask_file)
     roi_cords = sims.parse_roi(roi_file)
     roi = sims.Polygon([(roi_cords[1], roi_cords[0]), (roi_cords[1], roi_cords[0]+roi_cords[2]), (roi_cords[1]+roi_cords[3], roi_cords[0]+roi_cords[2]), (roi_cords[1]+roi_cords[3], roi_cords[0])])
@@ -75,11 +74,11 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     data_pre, data = sims.parse_data(data_file, offset) # offset origianlly 10.5
     data_norm = data[1,:] / np.mean(data_pre[1,:])
 
-    sim_len = 50 #recomended
+    sim_len = 250 #recomended
     x0, y0 = sims.init_sim(12000, nuc)
-    s1 = .1
-    s2 = .1
-    N = 50
+    s1 = .18
+    s2 = .18
+    N = 100
     L = 3
 
     #OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = optimization.MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bound_d, sim_len, data, data_pre, data_norm, x0, y0) #.18 is timestep
@@ -103,10 +102,8 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     ax[1].legend()
     ax[1].set_xlabel("Time (s)")
     ax[1].set_ylabel("Fraction of Proteins Bound/Baseline")
-    plt.savefig(file_name+"fig")
+    plt.savefig(file_name+"fig") #saves figure to directory
     print("figure saved")
-    #figure to return
-    #plt.savefig(file_name+"fig")s
     savepath = 'C:/GitHub/McDiff/app'
     os.path.join(savepath+'/graph', file_name+"fig")
     #CSV to return to the user, as in simulated data results saved in results
@@ -115,7 +112,6 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     newfile = open(file_name+"MCMC_results.csv", 'w')
 
     for i in range(len(ret_error)):
-        print("writing file")
         text = "{0} {1} {2}\n".format(ret_error[i], results[0,i], results[1,i])
         newfile.write(text)
     #trying here to attach the data_file name onto return results name
@@ -126,21 +122,15 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     resid_plot_name = file_name+'_resid_plot'
     fit_data_name = file_name+"_MCMC_results.csv"
 
-    #fig, ax = plt.subplots(1)
-    #plt.plot(data[0,:], predict - data_norm, '.')
-    #plt.plot(np.linspace(0, max(data[0,:]), len(data[0,:])), np.zeros(len(data[0,:])),'-')
-    #plt.savefig(resid_plot_name)
-
-    #os.path.join(savepath+'/graph', resid_plot_name)
-
-    #D_final, F_final, ret_error = sims.rand_sam(percent_bleached, nuc, roi, mcmc_steps, fmin, fmax, dmin, bound_d)
-
     #results[0,0:N] = D
     #results[1,0:N] = F
     #results[2,0:N] = E
+    #these are all arrays 
+    D_final = results[0,0:N]
+    F_final = results[1,0:N]
+    ret_error = results[2,0:N]
 
-    print("done")
-    return resid_plot_name, fit_data_name, ret_error #D_final, F_final
+    return resid_plot_name, fit_data_name, ret_error, D_final, F_final
 
 
 
