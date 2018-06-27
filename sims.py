@@ -161,7 +161,18 @@ def update_positions(x_cord, y_cord, mu, sigma, nucleus, roi):
 
 
 def init_sim(N, nuc):
-    x, y = generate_random_points(N, nuc) #positions of all points
+    '''A wrapper function for initializing a simulation (x and y init. coords.)
+       We found it useful to initialize once then run many simulations,
+       as this keeps the amount of initial particle in ROI constant,
+       which removes artificial variance when normalizing results.
+       We then recommend optimizing and estimating parameters over several
+       initial conditions.
+       INPUT PARAMS:
+       N - number of particles
+       nuc - shapely polygon of nucleus
+       OUTPUT PARAMS:
+       x, y - arrays of positions of N particles within nucleus'''
+    x, y = generate_random_points(N, nuc)
     return x, y
 
 def simulate(D, f_mobile, f_bleached, nuc, roi, runtime, x0, y0):
