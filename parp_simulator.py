@@ -96,7 +96,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
 
     stuck_norm = sims.simulate(results[0,x], results[1,x], 0.5, nuc, roi, sim_len, x0, y0)
     stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
-    error = sims.compute_error(data, data_norm, stuck_time, stuck_norm)
+    ret_error = sims.compute_error(data, data_norm, stuck_time, stuck_norm)
 
     fig, ax = plt.subplots(2)
     ax[0].scatter(results[0,:], results[1,:], 10., results[2,:], ".")
@@ -106,13 +106,14 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     ax[1].set_xlabel("Time (s)")
     ax[1].set_ylabel("Fraction of Proteins Bound/Baseline")
     #figure to return
-    #plt.savefig(file_name+"fig")
+    #plt.savefig(file_name+"fig")s
+    savepath = 'C:/GitHub/McDiff/app'
     os.path.join(savepath+'/graph', file_name+"fig")
     #CSV to return to the user, as in simulated data results saved in results
     save_path = 'C:/GitHub/app/static/'
     newfile = open(file_name+"MCMC_results.csv", 'w')
-    for i in range(len(error)):
-        text = "{0} {1} {2}\n".format(error[i], results[0,i], results[1,i])
+    for i in range(len(ret_error)):
+        text = "{0} {1} {2}\n".format(ret_error[i], results[0,i], results[1,i])
         newfile.write(file_name+"_MCMC_results.csv")
     #trying here to attach the data_file name onto return results name
     os.path.join(save_path+'/results', file_name+"_MCMC_results.csv")
@@ -120,6 +121,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
 
 
     resid_plot_name = file_name+'_resid_plot'
+    fit_data_name = file_name+"_MCMC_results.csv"
 
     #fig, ax = plt.subplots(1)
     #plt.plot(data[0,:], predict - data_norm, '.')
@@ -135,7 +137,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     #results[2,0:N] = E
 
 
-    return fit_plot_name, resid_plot_name, fit_data_name, D_final, F_final, ret_error
+    return resid_plot_name, fit_data_name, ret_error #D_final, F_final
 
 
 
@@ -154,7 +156,7 @@ def main(args):
     file_name = "FILE"
 
     #data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps = input('Please input in this order: \n data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps' )
-    wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps, file_name)
+    print(wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps, file_name))
     return 0
 
 if __name__ == '__main__':
