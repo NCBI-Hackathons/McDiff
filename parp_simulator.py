@@ -86,12 +86,10 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     #bool_flag_1 and bool_flag_2 and interate ends are for debugging, if either is true then the simulation has gone wrong
 
     results = optimization.CF(percent_bleached, nuc, roi, 0, 1, 0, bound_d, s1, s2, N, L, x0, y0, sim_len, data, data_norm)
-
+    print("done with cf")
     x = results[2,:].argmin()
     results[2,x]
 
-    #lo_mejor = Error.argmin() #index of parameter optimal
-    #los_mejores = AP[:, lo_mejor] #best parameters
     exp_time = int(exp_time/.18) #translate time to steps
 
     stuck_norm = sims.simulate(results[0,x], results[1,x], 0.5, nuc, roi, sim_len, x0, y0)
@@ -105,16 +103,21 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     ax[1].legend()
     ax[1].set_xlabel("Time (s)")
     ax[1].set_ylabel("Fraction of Proteins Bound/Baseline")
+    plt.savefig(file_name+"fig")
+    print("figure saved")
     #figure to return
     #plt.savefig(file_name+"fig")s
     savepath = 'C:/GitHub/McDiff/app'
     os.path.join(savepath+'/graph', file_name+"fig")
     #CSV to return to the user, as in simulated data results saved in results
     save_path = 'C:/GitHub/app/static/'
+
     newfile = open(file_name+"MCMC_results.csv", 'w')
+
     for i in range(len(ret_error)):
+        print("writing file")
         text = "{0} {1} {2}\n".format(ret_error[i], results[0,i], results[1,i])
-        newfile.write(file_name+"_MCMC_results.csv")
+        newfile.write(text)
     #trying here to attach the data_file name onto return results name
     os.path.join(save_path+'/results', file_name+"_MCMC_results.csv")
     #print(data_file+"_MCMC_results.csv")
@@ -136,7 +139,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     #results[1,0:N] = F
     #results[2,0:N] = E
 
-
+    print("done")
     return resid_plot_name, fit_data_name, ret_error #D_final, F_final
 
 
