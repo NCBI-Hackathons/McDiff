@@ -61,7 +61,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     #recomend/default  mcmc_steps = 200 - int
     #default bound_d = 20  - int the upper bound for the for you think d could possibly be
     #default offset = 10.5 - float
-    #default dam_ind = 6.0, int
+    #default dam_ind = 6, int
     #default mcmc_temp = 1 - int  when to calc likelyhood ratio, devide be estmate of noise ***NOT TEMPURATURE OF EXPERIMENT
     #default percent_bleached = .54 that is when grean(gfp) is used, that is ammount that becomes bleached - float
     #mcmc_steps = 200 suggestion -int
@@ -85,7 +85,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     #OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = optimization.MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bound_d, sim_len, data, data_pre, data_norm, x0, y0) #.18 is timestep
     #bool_flag_1 and bool_flag_2 and interate ends are for debugging, if either is true then the simulation has gone wrong
 
-    results = optimization.CF(percent_bleached, nuc, roi, 0, 1, 0, bound_d, s1, s2, N, L, x0, y0, sim_len, data, data_norm)
+    results = optimization.CF(percent_bleached, nuc, roi, 0, 1, 0, bound_d, s1, s2, N, L, x0, y0, exp_time, data, data_norm)
     print("done with cf")
     x = results[2,:].argmin()
     results[2,x]
@@ -123,6 +123,8 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     resid_plot_name = file_name+'_resid_plot'
     fit_data_name = file_name+"_MCMC_results.csv"
 
+    Rsq = sims.compute_Rsq(data, data_norm, stuck_time, stuck_norm, plot_name = None)
+
     #results[0,0:N] = D
     #results[1,0:N] = F
     #results[2,0:N] = E
@@ -131,7 +133,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     F_final = results[1,0:N]
     ret_error = results[2,0:N]
 
-    return resid_plot_name, fit_data_name, ret_error, D_final, F_final
+    return resid_plot_name, fit_data_name, Rsq, D_final, F_final
 
 
 
@@ -147,10 +149,11 @@ def main(args):
     offset = 10.5
     mcmc_steps = 250
     percent_bleached = .56
+    dam_ind = 6
     file_name = "FILE"
 
     #data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps = input('Please input in this order: \n data_file, roi_file, mask_file, bound_d, exp_time, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps' )
-    print(wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, mcmc_steps, file_name))
+    print(wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, dam_ind, mcmc_steps, file_name))
     return 0
 
 if __name__ == '__main__':

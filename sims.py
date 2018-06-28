@@ -40,7 +40,7 @@ def parse_data(data, offset, damage_index):
     '''Reads in a csv with data on accumulation of parp in nucleus over time.
        This assumes that the first several rows of data (time points) are
        before the laser damage occurs.
-       x1 is a 2D array with row 1 time points, row 2 parp concentrations, 
+       x1 is a 2D array with row 1 time points, row 2 parp concentrations,
        before the laser damage.
        x2 is a 2D array with row 1 time points, row 2 parp concentrations,
        after the laser damage.
@@ -57,7 +57,7 @@ def parse_data(data, offset, damage_index):
        the entries 1 - damage_index will end up in x1, damage_index - end
        will end up in x2.
        think of it as the row in the csv where the laser damage occurs.'''
-    
+
     with open(data, 'r') as f:
         a = f.read()
     b = a.split('\n')
@@ -78,8 +78,8 @@ def parse_data(data, offset, damage_index):
 
 def generate_random_points(N, poly):
     '''Randomly (uniformly distributed) placement of N particles within the
-       borders of shapely polygon 'poly'. 
-       This generates 3N particles and returns only the first N within poly.'''   
+       borders of shapely polygon 'poly'.
+       This generates 3N particles and returns only the first N within poly.'''
     list_of_points = np.zeros((2, N))
     minx,miny,maxx,maxy = poly.bounds
     counter = 0
@@ -193,13 +193,13 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime, x0, y0):
         OUTPUT PARAMS:
         all_stuck - (array) time series with counts of particles in ROI
         '''
-        
+
     # length of each time step (in seconds)
     # we hard-coded this in to roughly match Johannes's experiments.
     h = 0.18
     # conversion factor for microns to pixels
     microns_2_pixels = .08677
-    # number of particles to simulate 
+    # number of particles to simulate
     # (hard-coded for now, maybe should later be added as argument for
     # larger nucleus sizes)
     N = 12000
@@ -223,7 +223,7 @@ def simulate(D, f_mobile, f_bleached, nuc, roi, runtime, x0, y0):
     N_sim = int((N - N0_roi) * f_mobile)
     x = x0[out_roi][:N_sim]
     y = y0[out_roi][:N_sim]
-    
+
     # iterate particle movements over time
     # in each time step, store the number of particles moved
     for i in range(1,runtime+1):
@@ -251,7 +251,7 @@ def compute_error(data, data_norm, stuck_time, stuck_norm):
     return error #np.sqrt(error)
 
 def compute_Rsq(data, data_norm, stuck_time, stuck_norm, plot_name = None):
-    '''Calculates R-squared 
+    '''Calculates R-squared
     (technically not correct Rsq due to non-linearity of our curve but w/e)
     INPUT PARAMS:
     data - raw observed data, 2d numpy array, where first row contains time (s)
@@ -261,7 +261,7 @@ def compute_Rsq(data, data_norm, stuck_time, stuck_norm, plot_name = None):
     plot_name - name of plot (if None, do not plot results)
     OUTPUT PARAMS:
     R squared = 1 - (sum of sq. resid. error) / (sum of sq. total error)'''
-    
+
     # interpf is an interpolation object (from scipy)
     # used to interpolate simulated concentration in ROI for the time points
     # in observed data
@@ -270,17 +270,17 @@ def compute_Rsq(data, data_norm, stuck_time, stuck_norm, plot_name = None):
     predict = interpf(data[0,:])
     # residuals
     residus = predict - data_norm
-    
+
     # summed square error (total variance in observed data)
     sse = np.sum((data_norm - np.mean(data_norm))**2)
     # summed square residuals (error in simulation)
     ssr = np.sum((residus)**2)
-    
+
     if not plot_name:
         # plot residuals
         plt.plot(data[0,:], residus, '.')
         # plot zero line for comparison
         plt.plot(np.linspace(0, max(data[0,:]), len(data[0,:])), np.zeros(len(data[0,:])),'-')
         plt.savefig(plot_name)
-    
+
     return 1 - (ssr/sse)
