@@ -109,3 +109,4 @@ venv.bak/
 *.png
 # Our files?
 uploads/
+FILE_MCMC_results.csv

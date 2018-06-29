@@ -54,7 +54,7 @@ import optimization  #exec(open('sims.py').read())
 import matplotlib.pyplot as plt
 
 
-def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, dam_ind, mcmc_steps, file_name):
+def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached, sigmaD, sigmaF, mcmc_temp, offset, dam_ind, mcmc_steps, file_name, run_option):
     #exp_time is the sim_len but dont want the user to have to do the calcualations
     #default sigmaD =2    parameters in the mcmc - int
     #default sigmaf =.05  parameters in the mcmc - float
@@ -65,6 +65,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
     #default mcmc_temp = 1 - int  when to calc likelyhood ratio, devide be estmate of noise ***NOT TEMPURATURE OF EXPERIMENT
     #default percent_bleached = .54 that is when grean(gfp) is used, that is ammount that becomes bleached - float
     #mcmc_steps = 200 suggestion -int
+    #run_option takes in which run(MCMC, CF, rand_sample to run and does that)
 
     #parse all data files then create the roi and the nucleus:
     mask = sims.parse_mask(mask_file)
@@ -84,9 +85,19 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
 
     #OP, Error, AP, bool_flag_1, bool_flag_2, Iterate_ended = optimization.MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bound_d, sim_len, data, data_pre, data_norm, x0, y0) #.18 is timestep
     #bool_flag_1 and bool_flag_2 and interate ends are for debugging, if either is true then the simulation has gone wrong
+    if(run_option = 'CF')
+        results = optimization.CF(percent_bleached, nuc, roi, 0, 1, 0, bound_d, s1, s2, N, L, x0, y0, exp_time, data, data_norm)
+        print("done with cf")
+    else if(run_option = 'MCMC')
+        results = optimization.MCMC(4, .18, percent_bleached, nuc, roi, mcmc_steps, mcmc_temp, sigmaD, sigmaF, 0, 1, 0, bound_d, sim_len, data, data_pre, data_norm, x0, y0)
+        print("done with MCMC")
+    else if(run_option = 'rand_sample')
+        results = optimization.rand_sam(f_bleached, nuc, roi, N, fmin, fmax, dmin, dmax, x0, y0, sim_len, data, data_norm)
+        print("done with random sample")
+    else
+        print("Improper input")
+        return -1 #exits
 
-    results = optimization.CF(percent_bleached, nuc, roi, 0, 1, 0, bound_d, s1, s2, N, L, x0, y0, exp_time, data, data_norm)
-    print("done with cf")
     x = results[2,:].argmin()
     results[2,x]
 
@@ -94,6 +105,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
 
     stuck_norm = sims.simulate(results[0,x], results[1,x], 0.5, nuc, roi, sim_len, x0, y0)
     stuck_time = np.arange(sim_len+1) * 0.18 #converts array indices into seconds
+    #uses Rsq function instead
     ret_error = sims.compute_error(data, data_norm, stuck_time, stuck_norm)
 
     fig, ax = plt.subplots(2)
@@ -121,7 +133,7 @@ def wrapper(data_file, roi_file, mask_file, bound_d, exp_time, percent_bleached,
 
 
     resid_plot_name = file_name+'_resid_plot'
-    fit_data_name = file_name+"_MCMC_results.csv"
+    fit_data_name = file_name+"_simulation_results.csv"
 
     Rsq = sims.compute_Rsq(data, data_norm, stuck_time, stuck_norm, plot_name = None)
 
